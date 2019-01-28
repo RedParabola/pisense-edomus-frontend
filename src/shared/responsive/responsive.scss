@@ -1,0 +1,42 @@
+/**
+ Hide:
+ - hide
+ - hide-xs
+ - hide-gt-xs
+ - hide-md
+ - hide-gt-md
+ - hide-lg
+ Show:
+ - show
+ - show-xs
+ - show-gt-xs
+ - show-md
+ - show-gt-md
+ - show-lg
+ */
+
+// Mobile first
+@include mobile-strict {
+    .mfw-hide-xs,
+    .mfw-hide:not(.mfw-show-xs) {
+        display: none;
+    }
+}
+
+// Tablet
+@include tablet-strict {
+    .mfw-hide-md,
+    .mfw-hide:not(.mfw-show-gt-sm):not(.mfw-show-md),
+    .mfw-hide-gt-xs:not(.mfw-show-md) {
+        display: none;
+    }
+}
+
+// Desktop
+@include desktop-strict {
+    .mfw-hide-lg,
+    .mfw-hide:not(.mfw-show-gt-md):not(.mfw-show-lg),
+    .mfw-hide-gt-md:not(.mfw-show-lg) {
+        display: none;
+    }
+}

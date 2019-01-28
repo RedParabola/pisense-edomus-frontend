@@ -1,0 +1,16 @@
+{
+  "$environment": {
+    "name": "Test",
+    "isProduction": false
+  },
+  "appInfo": {
+    "id": "com.edomus.app.test"
+  },
+  "html5BaseHref": "/",
+  "$apiConfig": {
+    "prefixURLEndPoint": "http://example.com/",
+    "securityEndpoint": "",
+    "apiBaseEndpoint": "api/",
+    "apiVersion": ""
+  }
+}

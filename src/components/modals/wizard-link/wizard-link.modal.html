@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button (click)="back()">{{currentSlide === 0? 'Discard': 'Back'}}</button>
+    </ion-buttons>
+    <ion-title >Link thing to a room</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="next()" [disabled]="!canSlideNext()">{{currentSlide === 1? 'Finish': 'Next'}}</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-slides (ionSlideWillChange)="slideWillChange()" (ionSlideDidChange)="slideChanged()" pager>
+    <ion-slide>
+      <h1>Select the room you want to link '{{linkingThing.customName}}'' with:</h1>
+      <ion-list radio-group [(ngModel)]="selectedRoom">
+        <ion-item *ngFor="let room of roomList">
+          <ion-label>{{room.customName}}</ion-label>
+          <ion-radio [value]="room"></ion-radio>
+        </ion-item>
+      </ion-list>
+    </ion-slide>
+    <ion-slide>
+      <h1>'{{linkingThing.customName}}' will be linked to room '{{selectedRoom?.customName}}'.</h1>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

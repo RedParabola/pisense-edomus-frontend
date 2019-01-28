@@ -1,0 +1,26 @@
+<ion-card style="margin: 4px;">
+  <div class="thing-image-background"
+  [style.background-image]="thingTypeImage">
+    <div class="thing-display" [ngClass]="{'illuminated': actuallyIlluminated}">
+      <ion-row padding text-wrap style="height: 35px;">
+        <div class="thing-icon">
+          <ion-icon name="{{thingTypeIcon}}"></ion-icon>
+        </div>
+        <div class="thing-title">{{thing.customName}}</div>
+      </ion-row>
+      <ion-row padding-left>
+        <ion-col col-10>
+        </ion-col>
+        <ion-col col-2>
+          <ion-row>
+            <ion-toggle toggle-class="toggle-energized"
+              [(ngModel)]="isLit"
+              (ngModelChange)="toggleLight($event)"
+              [disabled]="lightDisabled">
+            </ion-toggle>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-card>

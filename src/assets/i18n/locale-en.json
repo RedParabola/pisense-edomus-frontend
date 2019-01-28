@@ -1,0 +1,46 @@
+{
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "search": "Search",
+    "add": "Add",
+    "delete": "Delete",
+    "deleteAll": "Delete all",
+    "denyAndContinue": "Later, thank you",
+    "agreeAndContinue": "Agree and Continue",
+    "goToDeviceGPSSettings": "Go to Settings"
+  },
+  "toast": {
+    "settings": {
+      "error1": {
+        "message": "An error ocurred while saving language"
+      },
+      "error2": {
+        "message": "An error ocurred while changing language"
+      },
+      "success1": {
+        "message": "Switched language successfully"
+      }
+    }
+  },
+  "menu": {
+    "settings": "Settings",
+    "myProfile": "My Profile",
+    "changePassword": "Change Password",
+    "logout": "Logout",
+    "settingsSidebar": {
+      "language": "Language",
+      "privacy": "Privacy",
+      "about": "About"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": {
+      "title": "Language"
+    },
+    "languages": {
+      "en": "English"
+    }
+  }
+}

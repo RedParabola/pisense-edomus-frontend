@@ -1,0 +1,28 @@
+humidifier {
+  .thing-image-background {
+    background-repeat: no-repeat;
+    background-origin: center;
+    background-size: cover;
+    background-position: center;
+    div {
+      height: 150px;
+      color: $dark_blue;
+      font-weight: bold;
+    }
+    .thing-display {
+      background: linear-gradient(-4deg, transparent 60%, $white 90%),
+                  linear-gradient(172deg, transparent 60%, $black 120%);
+      .thing-icon {
+      }
+      .thing-title {
+        font-size: 1.2em;
+        padding-left: 6px;
+      }
+    }
+    .illuminated {
+      background: linear-gradient(-4deg, transparent 60%, $white 90%),
+                  linear-gradient(172deg, transparent 60%, $black 120%),
+                  linear-gradient(to right, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(215, 215, 215, 1) 110%);
+    }
+  }
+}

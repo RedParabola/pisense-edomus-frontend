@@ -1,0 +1,30 @@
+light {
+  .thing-image-background {
+    background-repeat: no-repeat;
+    background-origin: center;
+    background-size: cover;
+    background-position: center;
+    div {
+      height: 80px;
+      color: $dark_blue;
+      font-weight: bold;
+    }
+    .thing-display {
+      background: linear-gradient(to right, transparent 0%, $black 100%),
+                  linear-gradient(-3deg, transparent 50%, $white 85%),
+                  linear-gradient(172deg, transparent 60%, $black 120%),
+                  linear-gradient(to right, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.4) 100%);
+      .thing-icon {
+      }
+      .thing-title {
+        font-size: 1.2em;
+        padding-left: 6px;
+      }
+    }
+    .illuminated {
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.8) 100%),
+                  linear-gradient(-3deg, transparent 50%, $white 85%),
+                  linear-gradient(172deg, transparent 60%, $black 120%);
+    }
+  }
+}

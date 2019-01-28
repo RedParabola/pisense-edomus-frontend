@@ -1,0 +1,34 @@
+<ion-item-sliding #slidingItem>
+  <ion-item no-padding>
+    <ion-icon name="{{thingTypeIcon}}" item-start></ion-icon>
+    <h3>{{thing.customName}}</h3>
+    <p>{{thing.model}}</p>
+    <p class="linkedRoom" item-end *ngIf="thing.linkedRoomId">{{thing.linkedRoomName}}</p>
+    <ion-icon name="md-bookmark" item-end *ngIf="thing.flaggedAsMain"></ion-icon>
+    <ion-icon name="ios-link" item-end *ngIf="thing.linkedRoomId"></ion-icon>
+  </ion-item>
+  <ion-item-options side="left">
+    <button ion-button class="delete" (click)="delete(slidingItem)">
+      <ion-icon name="ios-trash"></ion-icon>Delete
+    </button>
+  </ion-item-options>
+  <ion-item-options side="right">
+    <button ion-button class="more" (click)="more(slidingItem)">
+      <ion-icon name="md-more"></ion-icon>More
+    </button>
+    <button ion-button class="rename" (click)="rename(slidingItem)">
+      <ion-icon name="md-create"></ion-icon>Rename
+    </button>
+    <button ion-button class="flag" (click)="flagAsMain(slidingItem)" *ngIf="thing.linkedRoomId">
+      <ion-icon name="{{thing.flaggedAsMain? 'md-checkmark-circle-outline' : 'md-flag'}}"></ion-icon>{{thing.flaggedAsMain? 'Flagged' : 'Flag'}}
+    </button>
+    <button ion-button class="unlink" (click)="unlink(slidingItem)" *ngIf="thing.linkedRoomId; else notLinked">
+      <ion-icon name="md-close"></ion-icon>Unlink
+    </button>
+    <ng-template #notLinked>
+      <button ion-button class="link" (click)="link(slidingItem)">
+        <ion-icon name="ios-link"></ion-icon>Link
+      </button>
+    </ng-template> 
+  </ion-item-options>
+</ion-item-sliding>

@@ -1,0 +1,196 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+@mixin media-breakpoint-down($name, $breakpoints: $grid-breakpoints) {
+    $max: breakpoint-max($name, $breakpoints);
+    @if $max {
+        @media (max-width: $max) {
+            @content;
+        }
+    }
+    @else {
+        @content;
+    }
+}
+
+// Name of the next breakpoint, or null for the last breakpoint.
+//
+//    >> breakpoint-next(sm)
+//    md
+//    >> breakpoint-next(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+//    md
+//    >> breakpoint-next(sm, $breakpoint-names: (xs sm md lg xl))
+//    md
+@function breakpoint-next($name, $breakpoints: $grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
+    $n: index($breakpoint-names, $name);
+    @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+}
+
+// Maximum breakpoint width. Null for the largest (last) breakpoint.
+// The maximum value is calculated as the minimum of the next one less 0.1.
+//
+//    >> breakpoint-max(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+//    767px
+@function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
+    $next: breakpoint-next($name, $breakpoints);
+    @return if($next, breakpoint-min($next, $breakpoints) - 1px, null);
+}
+
+// Creates text alignment classes based on screen size
+// TODO this would be nice to add to the framework
+@each $breakpoint in map-keys($grid-breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+        // Provide text `[text-{bp}]` attributes for aligning text based on screen size
+        [text#{$infix}-center] {
+            text-align: center;
+        }
+        [text#{$infix}-left] {
+            text-align: left;
+        }
+        [text#{$infix}-right] {
+            text-align: right;
+        }
+        [hidden#{$infix}-up] {
+            display: none;
+        }
+    }
+    @include media-breakpoint-down($breakpoint, $grid-breakpoints) {
+        [hidden#{$infix}-down] {
+            display: none;
+        }
+    }
+}
+
+// Custom Variables
+// --------------------------------------------------
+
+//Custom Application mixins
+@import '../scss/partials/mixins';
+
+//Custom Application fonts
+@import '../scss/partials/fonts';
+
+//Custom Application Layouts
+@import '../scss/layouts/tablet';
+@import '../scss/layouts/desktop';
+
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+  }
+
+
+ion-app {
+    // Hide vertical scroll bar when there's no actual overflow
+    .scroll-content {
+        overflow-y: auto;
+    }
+}
+
+ion-content {
+    // Allow white backgrounds overriding default gray one
+    &.content-md.bg-white {
+        background-color: $white;
+    }
+
+    &.content-ios.bg-white {
+        background-color: $white;
+    }
+}
+
+// Hide back button when we are on desktop view
+@include desktop-strict {
+  .back-button.show-back-button {
+    display: none;
+  }
+}
+
+// Back button color for all the application
+ion-header ion-icon.back-button-icon.icon {
+    color: $blue_10;
+}
+
+// [FIX-BUG] https://github.com/ionic-team/ionic/issues/12171
+.item-md {
+  @include padding-horizontal($item-md-padding-start, 0);
+
+  position: relative;
+
+  font-size: $item-md-font-size;
+  font-weight: normal;
+  text-transform: none;
+
+  color: $list-md-text-color;
+  background-color: $item-md-sliding-content-background;
+  box-shadow: none;
+  transition: background-color 300ms cubic-bezier(.4, 0, .2, 1);
+}
+
+/* Styles for disable alerts */
+.button-disabled {
+    color: grey !important;
+}
+
+@import '../scss/components/sidebar';
+
+/* Style for cards containers e.g. */
+
+.popover-ios {
+  .popover-arrow {
+      display: none !important;
+  }
+}
+
+@include tablet {
+    .margin-card-container {
+        width:inherit;
+        margin-left: 24px;
+        margin-right: 24px;
+    }
+}
+
+ion-popover {
+    .color-button {
+        color: $blue_10;
+      }
+}
+
+.popover-content {
+    overflow: hidden; /* fix to hide unneeded scrollbars in popover*/
+}

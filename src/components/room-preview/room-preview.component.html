@@ -1,0 +1,38 @@
+<ion-card style="margin: 4px;" (click)="goToRoom()">
+  <div class="room-image-background"
+    [style.background-image]="roomTypeImage">
+    <div class="room-display"
+      [ngClass]="{'illuminated': actuallyIlluminated}">
+      <ion-row padding text-wrap style="height: 35px;">
+        <div class="room-icon"><ion-icon name="{{roomTypeIcon}}"></ion-icon></div>
+        <div class="room-title">{{room.customName}}</div>
+      </ion-row>
+      <ion-row padding-left class="main-light">
+        <ion-label [hidden]="room.mainThingsId.LIGHT" ><i>No main light</i></ion-label>
+        <ion-label [hidden]="!room.mainThingsId.LIGHT" >{{mainLight?.customName}}</ion-label>
+        <ion-toggle [hidden]="!room.mainThingsId.LIGHT"
+          toggle-class="toggle-energized"
+          [(ngModel)]="mainLightOn"
+          (ngModelChange)="toggleMainLight($event)"
+          [disabled]="interactionDisabled">
+        </ion-toggle>
+      </ion-row>
+      <ion-row padding-horizontal class="temperature-info">
+        <ion-col text-left padding-left *ngIf="room.temperature">
+          {{room.temperature}}ºC
+        </ion-col>
+        <ion-col text-right padding-right>
+          <ion-icon *ngIf="airConditioningOn" name="icon-air-conditioning-indoor"></ion-icon>
+        </ion-col>
+      </ion-row>
+      <ion-row padding-horizontal class="humidity-info">
+        <ion-col text-left padding-left *ngIf="room.humidity">
+          {{room.humidity}}%
+        </ion-col>
+        <ion-col text-right padding-right>
+          <ion-icon *ngIf="humidifierOn" name="icon-drop"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-card>

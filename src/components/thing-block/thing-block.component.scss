@@ -1,0 +1,45 @@
+thing-block {
+  ion-item {
+    h3 {
+      color: $dark_blue;
+      font-weight: 500!important;
+    }
+    ion-icon {
+      color: $blue_10;
+      padding-left: 11px;
+    }
+    .item-inner {
+      margin-left: 7px!important;
+    }
+    p.linkedRoom {
+      color: $grey_blue;
+      font-style: italic;
+    }
+  }
+  ion-item-options {
+    .delete {
+      background-color: $red;
+      color: $white;
+    }
+    .more {
+      background-color: $grey;
+      color: $blue_10;
+    }
+    .rename {
+      background-color: $blue_10;
+      color: $white;
+    }
+    .flag {
+      background-color: $new_blue;
+      color: $white;
+    }
+    .link {
+      background-color: $green;
+      color: $white;
+    }
+    .unlink {
+      background-color: $orange;
+      color: $blue_10;
+    }
+  }
+}

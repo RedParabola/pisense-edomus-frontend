@@ -1,0 +1,16 @@
+{
+  "$environment": {
+    "name": "Development",
+    "isProduction": false
+  },
+  "appInfo": {
+    "id": "com.edomus.app.dev"
+  },
+  "html5BaseHref": "/",
+  "$apiConfig": {
+    "prefixURLEndPoint": "http://192.168.0.120:3000/",
+    "securityEndpoint": "",
+    "apiBaseEndpoint": "api/",
+    "apiVersion": ""
+  }
+}

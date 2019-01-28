@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      {{room.customName}}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only>
+        <ion-icon name="md-settings"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar no-padding>
+    <div class="room-image-background"
+      [style.background-image]="roomTypeImage">
+    </div>
+    <div class="room-display">
+      <p>Room Display</p>
+      <p>General room info here</p>
+    </div>
+    <div class="room-details">
+      <ion-list no-lines no-margin>
+        <ion-item no-margin>
+          <ion-label>
+            Your appliances
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <ion-list>
+    <thing *ngFor="let thing of roomThings" [thing]="thing">
+    </thing>
+  </ion-list>
+</ion-content>

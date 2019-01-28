@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button (click)="back()">{{currentSlide === 0? 'Discard': 'Back'}}</button>
+    </ion-buttons>
+    <ion-title >Adding new thing</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="next()" [disabled]="!canSlideNext()">{{currentSlide === 2? 'Finish': 'Next'}}</button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-slides (ionSlideWillChange)="slideWillChange()" (ionSlideDidChange)="slideChanged()" pager>
+    <ion-slide>
+      <h1>Choose a category for your new thing:</h1>
+      <ion-list radio-group [(ngModel)]="selectedType">
+        <ion-item *ngFor="let type of types">
+          <ion-label>{{type | titlecase}}</ion-label>
+          <ion-radio [value]="type"></ion-radio>
+        </ion-item>
+      </ion-list>
+    </ion-slide>
+    <ion-slide>
+      <h1>Select a compatible model for your new {{finalConfiguration.type | lowercase}}:</h1>
+      <ion-list radio-group [(ngModel)]="selectedModel">
+        <ion-item *ngFor="let model of models">
+          <ion-label>{{model}}</ion-label>
+          <ion-radio [value]="model"></ion-radio>
+        </ion-item>
+      </ion-list>
+    </ion-slide>
+    <ion-slide>
+      <h1>Make it happen by giving it a name :)</h1>
+      <ion-item>
+        <ion-input placeholder="My new light" clearInput [(ngModel)]="finalConfiguration.customName"></ion-input>
+      </ion-item>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

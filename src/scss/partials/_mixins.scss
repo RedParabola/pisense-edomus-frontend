@@ -1,0 +1,40 @@
+/* Responsive - mixin mobile*/
+
+@mixin mobile-strict {
+    @media (max-width: map-get($grid-breakpoints, breakpoint-next(xs)) - 1) {
+        @content;
+    }
+}
+
+
+/* Responsive - mixin tablet*/
+
+@mixin tablet-strict {
+    @media (min-width: map-get($grid-breakpoints, md)) and (max-width: map-get($grid-breakpoints, breakpoint-next(md)) - 1) {
+        @content;
+    }
+}
+
+
+/* Responsive - mixin desktop*/
+
+@mixin desktop-strict {
+    @media (min-width: map-get($grid-breakpoints, lg)) {
+        @content;
+    }
+}
+
+
+/* Responsive - mixin tablet & desktop*/
+
+@mixin tablet {
+    @media (min-width: map-get($grid-breakpoints, md)) {
+        @content;
+    }
+}
+
+@mixin tablet-portrait {
+    @media (min-device-height: map-get($grid-breakpoints, md)){
+        @content;
+    }
+}

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Builder
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="openNewRoomWizard()">
+        <ion-icon name="ios-add-circle-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-searchbar
+    [(ngModel)]="searchQuery"
+    (ionInput)="onSearchInput($event)"
+    (ionCancel)="onSearchCancel($event)">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <ion-list>
+    <room-block *ngFor="let room of listedRooms"
+      [roomInfo]="room"
+      (deleteEvent)="deleteRoom($event)"
+      (moreEvent)="openMore($event)"
+      (renameEvent)="renameRoom($event)"
+      (thingsEvent)="openThings($event)">
+    </room-block>
+  </ion-list>
+</ion-content>

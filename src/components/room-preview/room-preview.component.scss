@@ -1,0 +1,43 @@
+room-preview {
+  .room-image-background {
+    background-repeat: no-repeat;
+    background-origin: center;
+    background-size: cover; 
+    background-position: center;
+    div {
+      height: 150px; 
+    }
+    .room-display {
+      background: linear-gradient(to bottom, transparent -125%, $black 125%); 
+      color: $light_blue;
+      .room-icon {
+        position: absolute;
+        top: 5%;
+        left: 6%;
+        font-size: 1.8em;
+        width: 100%;
+        font-weight: bold;
+      }
+      .room-title {
+        position: absolute;
+        top: 10%;
+        left: 25%;
+        font-size: 1.2em;
+        width: 100%;
+        font-weight: bold;
+      }
+      .main-light {
+      }
+      .temperature-info {
+        font-size: 1.4em;
+      }
+      .humidity-info {
+        font-size: 1.4em;
+      }
+    }
+    .illuminated {
+      background: linear-gradient(to bottom, transparent -50%, white 150%);
+      color: $blue_10;
+    }
+  }
+}

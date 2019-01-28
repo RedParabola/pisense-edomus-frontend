@@ -1,0 +1,136 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/theming/
+
+// Font path is used to include ionicons,
+// roboto, and noto sans fonts
+$font-path: "../assets/fonts";
+
+//Custom Appliation colors
+
+
+
+// The app direction is used to include
+// rtl styles in your app. For more info, please see:
+// http://ionicframework.com/docs/theming/rtl-support/
+$app-direction: ltr;
+
+
+@import "ionic.globals";
+
+
+// Named Color Variables
+// --------------------------------------------------
+// Named colors makes it easy to reuse colors on various components.
+// It's highly recommended to change the default colors
+// to match your app's branding. Ionic uses a Sass map of
+// colors so you can add, rename and remove colors as needed.
+// The "primary" color is the only required color in the map.
+@import '../scss/partials/colors';
+
+$colors: (
+  primary:    $blue_10
+);
+
+
+// Shared Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass variables found in Ionic's source scss files.
+// To view all the possible Ionic variables, see:
+// http://ionicframework.com/docs/theming/overriding-ionic-variables/
+$grid-breakpoints: (
+  xs: 0,
+  sm: 480px,
+  md: 992px,//600px,
+  lg: 1280px
+);
+
+
+// Padding added to all grids (CSS class 'grid')
+$grid-padding-width: 0;
+// Side menu width and split pane width
+$menu-width: 275px;
+$split-pane-side-max-width: $menu-width;
+$toolbar-background: $white;
+
+
+
+// App iOS Variables
+// --------------------------------------------------
+// iOS only Sass variables can go here
+$background-ios-color: $grey;
+$alert-ios-max-width: 80%;
+$alert-ios-content-max-height: 280px;
+$text-input-ios-show-valid-highlight: false;
+$content-ios-padding: 6px;
+$card-ios-background-color: white;
+$button-ios-background-color: $grey_10;
+$item-ios-avatar-size: 55px;
+$toolbar-ios-title-text-color: $blue_10;
+$button-ios-text-color: white;
+
+
+
+// App Material Design Variables
+// --------------------------------------------------
+// Material Design only Sass variables can go here
+
+$background-md-color: $grey;
+$alert-md-max-width: 80%;
+$alert-md-content-max-height: 280px;
+$text-input-md-show-valid-highlight: false;
+$content-md-padding: 6px;
+$card-md-background-color: white;
+$button-md-background-color: $grey_10;
+$item-md-avatar-size: 55px;
+$toolbar-md-title-text-color: $blue_10;
+$button-md-text-color: $blue_10;
+
+$card-md-margin-left: 4px;
+$card-md-margin-right: 4px;
+
+$button-md-text-transform: none;
+
+$toolbar-order-md:  (
+  back-button: 0, 
+  menu-toggle-start: 1, 
+  buttons-left: 2,
+  buttons-start: 3, 
+  content: 4, 
+  buttons-end: 5, 
+  buttons-right: 6, 
+  menu-toggle-end: 7 
+   );
+// App Windows Variables
+// --------------------------------------------------
+// Windows only Sass variables can go here
+
+
+
+
+// App Theme
+// --------------------------------------------------
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
+
+@import "ionic.theme.default";
+
+
+
+
+
+// Ionicons
+// --------------------------------------------------
+// The premium icon font for Ionic. For more info, please see:
+// http://ionicframework.com/docs/ionicons/
+
+@import "ionicons"; // @import "ionic.ionicons";  // In order to make icons work and not break ionic icons, change ionic.ionicons to ionicons
+@import "icon-extension";
+
+// Fonts
+// --------------------------------------------------
+
+@import "roboto";
+@import "noto-sans";

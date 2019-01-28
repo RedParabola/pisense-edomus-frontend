@@ -1,0 +1,8 @@
+{
+  "name": "edomus-project-frontend",
+  "integrations": {
+    "cordova": {},
+    "gulp": {}
+  },
+  "type": "ionic-angular"
+}

@@ -1,0 +1,43 @@
+page-home {
+  $content-padding: 8px;
+  .overview-image-background {
+    background-image: url('../assets/imgs/house.jpg'); 
+    filter: blur(2px);
+    height: 140px; 
+    background-repeat: no-repeat;
+    background-origin: center;
+    background-size: cover; 
+    background-position: center;
+  }
+  .overview-display {
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+    color: white;
+    font-weight: bold;
+    border: 3px solid #f1f1f1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -70%);
+    z-index: 2;
+    width: 95%;
+    padding: 5px;
+    text-align: center;
+    p {
+      font-size: 20px;
+    }
+  }
+  .overview-details{
+    ion-list {
+      ion-item {
+        background-color: $grey_blue;
+        color: $white;
+        font-size: $font-size-l;
+        font-weight: $font-roboto-medium;
+        ion-label.color-label{
+          color:$white;
+        }
+      } 
+    }
+  }
+}

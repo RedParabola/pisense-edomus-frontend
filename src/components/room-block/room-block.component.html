@@ -1,0 +1,23 @@
+<ion-item-sliding #slidingItem>
+  <ion-item no-padding>
+    <ion-icon name="{{roomTypeIcon}}" item-start></ion-icon>
+    <h3>{{room.customName}}</h3>
+    <p class="detail" item-end>Loler</p>
+  </ion-item>
+  <ion-item-options side="left">
+    <button ion-button class="delete" (click)="delete(slidingItem)">
+      <ion-icon name="ios-trash"></ion-icon>Delete
+    </button>
+  </ion-item-options>
+  <ion-item-options side="right">
+    <button ion-button class="more" (click)="more(slidingItem)">
+      <ion-icon name="md-more"></ion-icon>More
+    </button>
+    <button ion-button class="rename" (click)="rename(slidingItem)">
+      <ion-icon name="md-create"></ion-icon>Rename
+    </button>
+    <button ion-button class="things" (click)="openThings(slidingItem)" [disabled]="!room.things.length">
+      <ion-icon name="ios-list-box"></ion-icon>Things
+    </button>
+  </ion-item-options>
+</ion-item-sliding>

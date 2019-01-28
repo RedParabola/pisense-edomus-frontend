@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Connect
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="openNewThingWizard()">
+        <ion-icon name="ios-add-circle-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-searchbar
+    [(ngModel)]="searchQueryInput"
+    (ionInput)="onSearchInput($event)"
+    (ionCancel)="onSearchCancel($event)">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content no-bounce>
+  <ion-list>
+    <thing-block *ngFor="let thing of listedThings"
+      [thingInfo]="thing"
+      (deleteEvent)="deleteThing($event)"
+      (moreEvent)="openMore($event)"
+      (renameEvent)="renameThing($event)"
+      (flagMainEvent)="flagThingAsMain($event)"
+      (linkEvent)="linkThing($event)"
+      (unlinkEvent)="unlinkThing($event)">
+    </thing-block>
+  </ion-list>
+</ion-content>

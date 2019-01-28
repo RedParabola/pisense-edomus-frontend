@@ -1,0 +1,27 @@
+body {
+    .offline-reminder {
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        height: 50px;
+        width: 50px;
+        bottom: 0;
+        right:  0;
+        pointer-events: none;
+        margin: 10px;
+        i {
+            font-size: $font-size-xxxxl;
+            color: rgba(255,0,0,0.4);
+        }
+        animation-name: twinkle;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes twinkle {
+        50% {
+            opacity: 0.1;
+        }
+    }
+}
