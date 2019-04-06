@@ -9,7 +9,7 @@
   "html5BaseHref": "/",
   "$apiConfig": {
     "domainURLEndPoint": "192.168.0.120:3000",
-    "prefixURLEndPoint": "http://example.com/",
+    "prefixURLEndPoint": "http://192.168.0.120:3000/",
     "securityEndpoint": "",
     "apiBaseEndpoint": "api/",
     "apiVersion": ""
