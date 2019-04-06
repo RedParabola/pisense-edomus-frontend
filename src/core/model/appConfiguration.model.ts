@@ -63,6 +63,11 @@ namespace AppConfiguration {
   export interface ApiDefinition {
 
     /**
+     * Strict domain and port of the endpoint.
+     */
+    domainURLEndPoint: string;
+
+    /**
      * Base URL of the endpoint.
      */
     prefixURLEndPoint: string;

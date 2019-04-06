@@ -12,5 +12,15 @@
 </ion-header>
 
 <ion-content no-bounce>
+  <ion-list>
 
+    <ion-item>
+      <ion-label floating>Email</ion-label>
+      <ion-input [disabled] type="email">{{account.email}}</ion-input>
+    </ion-item>
+  
+    <button ion-button full (click)="logoutAccount()">Logout</button>
+
+
+  </ion-list>
 </ion-content>
