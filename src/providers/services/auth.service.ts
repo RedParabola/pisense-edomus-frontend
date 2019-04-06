@@ -5,6 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 
 // Services
 import { ToastService } from '../../providers/services/toast.service';
+import { LoggerService } from '../services/logger.service';
 
 @Injectable()
 export class AuthService {
@@ -22,8 +23,9 @@ export class AuthService {
    * Constructor to declare all the necesary to initialize the class.
    * @param helper 
    * @param toastService Controller to generate & present light notifications.
+   * @param loggerService logger service
    */
-  constructor(private helper: JwtHelperService, private toastService: ToastService) {
+  constructor(private helper: JwtHelperService, private toastService: ToastService, private loggerService: LoggerService) {
       this._authenticatedUser = null;
       this._authenticationState = new BehaviorSubject(false);
   }
@@ -47,6 +49,7 @@ export class AuthService {
   public setAuthenticatedByToken(token): any {
     this._authenticatedUser = this.helper.decodeToken(token);
     this._authenticationState.next(true);
+    this.loggerService.info(this, `Authentication successful.`);
   }
   
   /**
@@ -80,6 +83,7 @@ export class AuthService {
   private _logout(): void {
     this._authenticatedUser = null;
     this._authenticationState.next(false);
+    this.loggerService.info(this, `Authentication logout.`);
   }
   
   private _showAlert(message: string): void {

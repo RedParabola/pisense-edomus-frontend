@@ -1,12 +1,13 @@
 // Basic
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 // Api Services
 import { RoomDatabaseService } from '../db/room.service.db';
 import { ApiRoomProvider } from '../api/api-room.service';
 
 // Services
+import { AuthService } from '../services/auth.service';
 import { NetworkStatus } from '../services/networkStatus.service';
 import { LoggerService } from '../services/logger.service'
 
@@ -30,6 +31,11 @@ export class RoomStore {
   private _currentRooms: RoomModel[]
 
   /**
+   * Subscription to network status.
+   */
+  private _networkSubscription: Subscription;
+
+  /**
    * Wether the app is currently connected or not.
    */
   private isOnline: boolean;
@@ -38,16 +44,27 @@ export class RoomStore {
    * Constructor to declare all the necesary to initialize the class.
    * @param roomDB Room database service
    * @param roomProvider Api room provider
+   * @param authService Service to provide authentication
    * @param networkStatusService Network status service
    * @param loggerService logger service
    */
-  constructor(private roomDB: RoomDatabaseService, private roomProvider: ApiRoomProvider, private networkStatusService: NetworkStatus, private loggerService: LoggerService) {
-    this.networkStatusService.onlineObserver().subscribe((isOnline) => {
-      this.isOnline = isOnline;
-      this.synchronizeData();
-    });
-    this._currentRooms = [];
+  constructor(private roomDB: RoomDatabaseService, private roomProvider: ApiRoomProvider, public auth: AuthService, private networkStatusService: NetworkStatus, private loggerService: LoggerService) {
     this._currentRoomsObservable = new BehaviorSubject<RoomModel[]>([]);
+    this._currentRooms = [];
+    this._networkSubscription = null;
+  }
+
+  public listenAuthenticationStatus(): void {
+    this.auth.authenticationObserver().subscribe((status: boolean) => {
+      if (status) {
+        this._networkSubscription = this.networkStatusService.onlineObserver().subscribe((isOnline) => {
+          this.isOnline = isOnline;
+          this.synchronizeData();
+        });
+      } else if (this._networkSubscription) {
+        this._networkSubscription.unsubscribe();
+      }
+    });
   }
 
   /**

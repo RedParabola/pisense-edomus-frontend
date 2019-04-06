@@ -34,6 +34,20 @@ export class NavigationService {
     this.activeNav = this.app.getActiveNav();
   }
 
+  public subscribeAuthenticationStatus(): void {
+    this.auth.authenticationObserver().subscribe((status: boolean) => {
+      if (status) {
+        this._goTo('page-base-tabs');
+      } else {
+        this._goTo('page-login');
+      }
+    });
+  }
+
+  public goTo(pageRoute: string, navigationParameters?: any): void {
+    this._goTo(pageRoute, navigationParameters);
+  }
+
   /**
    * Shows a modal with options.
    * @param component Component to be shown as modal.
@@ -41,7 +55,7 @@ export class NavigationService {
    * @param options Modal options.
    * @returns Modal item to be able to manipulate it.
    */
-  public goTo(pageRoute: string, navigationParameters?: any): void {
+  private _goTo(pageRoute: string, navigationParameters?: any): void {
     if (this._isPublicRoute(pageRoute)) {
       this.activeNav.push(pageRoute, navigationParameters);
     } else {

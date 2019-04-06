@@ -1,6 +1,6 @@
 // Basic
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 // Api Services
 import { ThingDatabaseService } from '../db/thing.service.db';
@@ -9,6 +9,7 @@ import { ApiLinkProvider } from '../api/api-link.service';
 
 // Services
 import { RoomStore } from './room.store';
+import { AuthService } from '../services/auth.service';
 import { NetworkStatus } from '../services/networkStatus.service';
 import { LoggerService } from '../services/logger.service'
 
@@ -37,6 +38,11 @@ export class ThingStore {
   private _currentThings: ThingModel[]
 
   /**
+   * Subscription to network status.
+   */
+  private _networkSubscription: Subscription;
+
+  /**
    * Wether the app is currently connected or not.
    */
   private isOnline: boolean;
@@ -47,16 +53,14 @@ export class ThingStore {
    * @param thingDB Thing database service
    * @param thingProvider Api thing provider
    * @param linkProvider Api link provider
+   * @param authService Service to provide authentication
    * @param networkStatusService Network status service
    * @param loggerService logger service
    */
-  constructor(private roomStore: RoomStore, private thingDB: ThingDatabaseService, private thingProvider: ApiThingProvider, private linkProvider: ApiLinkProvider, private networkStatusService: NetworkStatus, private loggerService: LoggerService) {
-    this.networkStatusService.onlineObserver().subscribe((isOnline) => {
-      this.isOnline = isOnline;
-      this.synchronizeData();
-    });
-    this._currentThings = [];
+  constructor(private roomStore: RoomStore, private thingDB: ThingDatabaseService, private thingProvider: ApiThingProvider, private linkProvider: ApiLinkProvider, public auth: AuthService, private networkStatusService: NetworkStatus, private loggerService: LoggerService) {
     this._currentThingsObservable = new BehaviorSubject<ThingModel[]>([]);
+    this._currentThings = [];
+    this._networkSubscription = null;
   }
 
   public isThingModelArray(arg: any): arg is ThingModel[] {
@@ -64,6 +68,19 @@ export class ThingStore {
       arg.every((element) => {
         return element.id !== undefined && element.typeProperties !== undefined
       });
+  }
+
+  public listenAuthenticationStatus(): void {
+    this.auth.authenticationObserver().subscribe((status: boolean) => {
+      if (status) {
+        this._networkSubscription = this.networkStatusService.onlineObserver().subscribe((isOnline) => {
+          this.isOnline = isOnline;
+          this.synchronizeData();
+        });
+      } else if (this._networkSubscription) {
+        this._networkSubscription.unsubscribe();
+      }
+    });
   }
 
   /**

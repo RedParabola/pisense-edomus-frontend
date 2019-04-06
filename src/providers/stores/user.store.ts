@@ -41,18 +41,33 @@ export class UserStore {
     this.currentUser = null;
   }
 
+  public listenAuthenticationStatus(): void {
+    this.authService.authenticationObserver().subscribe((status: boolean) => {
+      if (status) {
+        this.currentUser = this.authService.getAuthenticatedUser();
+        this.loggerService.info(this, `Login successful. User: ${this.currentUser.email}`);
+      } else {
+        if (!!this.currentUser) {
+          this._cleanLastUserInfo().then(
+            () => this.loggerService.info(this, `Logout successful.`),
+            (error) => { }
+          );
+        }
+      }
+    })
+  }
+
   /**
    * Initialize authenticated user by detecting stored token.
    */
   public initializeUser(): Promise<any> {
     const promise: Promise<any> = new Promise<any>((resolve, reject) => {
-      this._listenAuthenticationStatus();
       this.userDB.get(USER_CONSTANTS.TOKEN).then(
         (token: any) => {
           if (this.authService.isTokenValid(token)) {
             this.loggerService.info(this, `Located VALID TOKEN, refreshing authenticated user.`);
             this.authService.setAuthenticatedByToken(token);
-            // this.setRefreshTokenDate(token);
+            // this._setRefreshTokenDate(token);
             resolve();
           } else {
             this.loggerService.info(this, `Located EXPIRED TOKEN, removing from DB.`);
@@ -68,14 +83,6 @@ export class UserStore {
       );
     });
     return promise;
-  }
-
-  private setRefreshTokenDate(token: string): void {
-    // Set logic for refreshing the token.
-    // 1. We need a refresh token.
-    // 2. We need to check the expiration date: this.authService.getTokenExpirationDate(token);
-    // 3. We want it to refresh 5-10 min before expiration date.
-    // https://blog.angular-university.io/angular-jwt-authentication/ comments below :)
   }
 
   public getCurrentUser(): any {
@@ -108,7 +115,7 @@ export class UserStore {
           this.userDB.set(USER_CONSTANTS.TOKEN, token).then(
             (answer) => {
               this.authService.setAuthenticatedByToken(token);
-              // this.setRefreshTokenDate(token);
+              // this._setRefreshTokenDate(token);
               resolve();
             }, (error) => reject(error)
           );
@@ -120,21 +127,6 @@ export class UserStore {
 
   public logoutUser(): void {
     this.authService.onRequestedLogout();
-  }
-
-  private _listenAuthenticationStatus(): void {
-    this.authService.authenticationObserver().subscribe((status: boolean) => {
-      if (status) {
-        this.currentUser = this.authService.getAuthenticatedUser();
-      } else {
-        if (!!this.currentUser) {
-          this._cleanLastUserInfo().then(
-            () => this.loggerService.info(this, `Logout successful.`),
-            (error) => { }
-          );
-        }
-      }
-    })
   }
 
   private _cleanLastUserInfo(): Promise < any > {
@@ -157,4 +149,11 @@ export class UserStore {
     return promise;
   }
   
+  private _setRefreshTokenDate(token: string): void {
+    // Set logic for refreshing the token.
+    // 1. We need a refresh token.
+    // 2. We need to check the expiration date: this.authService.getTokenExpirationDate(token);
+    // 3. We want it to refresh 5-10 min before expiration date.
+    // https://blog.angular-university.io/angular-jwt-authentication/ comments below :)
+  }
 }

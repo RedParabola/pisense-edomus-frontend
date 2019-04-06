@@ -5,10 +5,11 @@ import { BehaviorSubject } from "rxjs";
 
 //Services
 import { UserStore } from '../../providers/stores/user.store';
+import { RoomStore } from '../../providers/stores/room.store';
+import { ThingStore } from '../../providers/stores/thing.store';
 import { OfflineReminder } from '../../shared/shared.module';
 import { LoggerService } from './logger.service';
 import { ConfigurationService } from '../../core/configuration.service';
-import { AuthService } from './auth.service';
 import { NavigationService } from './navigation.service';
 
 /**
@@ -31,12 +32,13 @@ export class ApplicationService {
    * Constructor to declare all the necesary to initialize the class.
    * @param platform Used to get information about your current device.
    * @param userStore Store to handle user info.
+   * @param roomStore Store for handling rooms.
+   * @param thingStore Store for handling things.
    * @param offlineReminder Service used to feedback that the app is offline
    * @param loggerService Logger service
    * @param navigationService Navigation service to navigate through the app.
-   * @param authService Service to provide authentication
    */
-  constructor(private platform: Platform, private userStore: UserStore, private offlineReminder: OfflineReminder, private loggerService: LoggerService, private navigationService: NavigationService, private authService: AuthService) {
+  constructor(private platform: Platform, private userStore: UserStore, private roomStore: RoomStore, private thingStore: ThingStore, private offlineReminder: OfflineReminder, private loggerService: LoggerService, private navigationService: NavigationService) {
     this._isReady = new BehaviorSubject(false);
   }
 
@@ -45,54 +47,25 @@ export class ApplicationService {
    */
   public initializeApplication(): Promise<any> {
     const promise: Promise<any> = new Promise((resolve, reject) => {
-      this.platform.ready().then(() => {
-        if (isProduction) {
-          this.loggerService.setProductionMode();
-        }
-        //Initialize if the application is on a cordova platform
-        let onCordova = this._onCordovaEnvironment();
-
-        //Initialize navigation service nav
-        let navigationReady = this._initNavigationService();
-        
-        //Initialize authenticated user
-        let authenticatedStatus = this._initAuthenticatedStatus();
-
-
-        //Initialize offline reminder service
-        let offlineReminder = this._initializeOfflineReminderService();
-        Promise.all([
-          onCordova,
-          navigationReady,
-          offlineReminder,
-          authenticatedStatus
-        ]).then(() => {
+      this.platform.ready()
+        .then(() => this._onCordovaEnvironment())
+        .then(() => this._initializeServices())
+        .then(() => this._prepareForAuthenticationChanges())
+        .then(() => this._initializeUserSession())
+        .then(() => () => {
           this._isReady.next(true);
           resolve();
-        }, () => {
-          this.loggerService.error(this, `Application services could not be correctly initialized.`); 
-          reject();
-        });
+        })
+        .catch((error) => {
+          this.loggerService.error(this, `Application services could not be correctly initialized.`);
+          reject(error);
       });
     });
     return promise;
   }
 
   /**
-   * Method that says when the application is ready
-   */
-  public ready(): Promise<boolean> {
-    const promise: Promise<boolean> = new Promise((resolve, reject) => {
-      this._isReady.subscribe((isReady) => {
-        if (isReady) {
-          resolve();
-        }
-      });
-    });
-    return promise;
-  }
-
-  /**
+   * Initialize if the application is on a cordova platform
    * Method to know which things we have to set if cordova exists.
    */
   private _onCordovaEnvironment(): Promise<any> {
@@ -107,46 +80,54 @@ export class ApplicationService {
   }
 
   /**
-   *  Method to initialize the offline reminder inside the application context.
+   * // Initializes basic needs for each service.
    */
-  private _initializeOfflineReminderService(): Promise<any> {
-    const promise: Promise<any> = new Promise<any>((resolve, reject) => {
-      this.offlineReminder.init();
-      resolve();
-    });
-    return promise;
+  private _initializeServices(): Promise<any> {
+    if (isProduction) {
+      this.loggerService.setProductionMode();
+    }
+    this.offlineReminder.init();
+    this.navigationService.init();
+    return Promise.resolve(); 
   }
 
   /**
-   *  Method to initialize the offline reminder inside the application context.
+   * Prepares services and stores for listening authentication changes.
    */
-  private _initNavigationService(): Promise<any> {
-    const promise: Promise<any> = new Promise<any>((resolve, reject) => {
-      this.navigationService.init();
-      resolve();
-    });
-    return promise;
+  private _prepareForAuthenticationChanges(): Promise<any> {
+    this.navigationService.subscribeAuthenticationStatus();
+    this.userStore.listenAuthenticationStatus();
+    this.roomStore.listenAuthenticationStatus();
+    this.thingStore.listenAuthenticationStatus();
+    return Promise.resolve();
   }
 
   /**
-   *  Method to initialize the authenticated status.
+   *  Method to initialize the user session.
    */
-  private _initAuthenticatedStatus(): Promise<any> {
+  private _initializeUserSession(): Promise<any> {
     const promise: Promise<any> = new Promise<any>((resolve, reject) => {
-      this.authService.authenticationObserver().subscribe((status: boolean) => {
-        if (status) {
-          this.navigationService.goTo('page-base-tabs');
-        } else {
-          this.navigationService.goTo('page-login');
-        }
-      });
       this.userStore.initializeUser().then(
         () => resolve(),
         () => {
-          this.loggerService.error(this, `Could not initialize authenticated status correctly.`);
+          this.loggerService.error(this, `Could not initialize user session correctly.`);
           reject();
         }
       );
+    });
+    return promise;
+  }
+
+  /**
+   * Method that says when the application is ready
+   */
+  public ready(): Promise<boolean> {
+    const promise: Promise<boolean> = new Promise((resolve, reject) => {
+      this._isReady.subscribe((isReady) => {
+        if (isReady) {
+          resolve();
+        }
+      });
     });
     return promise;
   }
