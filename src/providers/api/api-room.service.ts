@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiGenericProvider, ConfigurationService } from '../../core/core.module';
 
 // Services
+import { AuthService } from '../../providers/services/auth.service';
 
 // Models
 import { RoomModel, RoomDraftModel } from '../../core/model/room.model';
@@ -25,9 +26,10 @@ export class ApiRoomProvider extends ApiGenericProvider {
   /**
    * ApiRoomProvider constructor
    * @param http Angular's http service to make calls against a server.
+   * @param authService Service to provide authentication
    */
-  constructor(http: HttpClient) {
-    super(`${prefixURLEndPoint}${apiBaseEndpoint}room`, http);
+  constructor(http: HttpClient, auth: AuthService) {
+    super(`${prefixURLEndPoint}${apiBaseEndpoint}room`, http, auth);
   }
 
   /**

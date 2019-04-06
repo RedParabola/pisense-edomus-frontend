@@ -183,6 +183,12 @@ export class ThingStore {
     return promise;
   }
 
+  public cleanUserThings(): Promise<any> {
+    this._currentThings = [];
+    this._currentThingsObservable.next([]);
+    return this.thingDB.removeAll();
+  }
+
   public linkRoom(thing: ThingModel, roomId: string): Promise<any> {
     const promise: Promise<any> = new Promise((resolve, reject) => {
       this.linkProvider.linkRoom(thing.id, roomId)

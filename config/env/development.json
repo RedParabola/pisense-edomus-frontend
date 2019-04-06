@@ -8,7 +8,8 @@
   },
   "html5BaseHref": "/",
   "$apiConfig": {
-    "prefixURLEndPoint": "http://192.168.0.120:3000/",
+    "domainURLEndPoint": "localhost:3000",
+    "prefixURLEndPoint": "http://localhost:3000/",
     "securityEndpoint": "",
     "apiBaseEndpoint": "api/",
     "apiVersion": ""

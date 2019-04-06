@@ -3,6 +3,8 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, Navbar } from 'ionic-angular';
 
 //Services
+import { UserStore } from '../../providers/stores/user.store';
+import { ToastService } from '../../providers/services/toast.service';
 
 /**
  * Account page.
@@ -17,9 +19,20 @@ export class AccountPage {
   @ViewChild(Navbar) navBar: Navbar;
 
   /**
-   * Account page constructor.
+   * Current logged account.
    */
-  constructor() {
+  public account: any;
+
+  /**
+   * Account page constructor.
+   * @param userStore Store to handle user info.
+   * @param toastService Controller to generate & present light notifications.
+   */
+  constructor(private userStore: UserStore, private toastService: ToastService) {
+    this.account = this.userStore.getCurrentUser();
   }
 
+  public logoutAccount(): void {
+    this.userStore.logoutUser();
+  }
 }

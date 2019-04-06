@@ -1,8 +1,9 @@
 //Basic
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, Navbar, NavController } from 'ionic-angular';
+import { IonicPage, Navbar } from 'ionic-angular';
 
 //Services
+import { NavigationService } from '../../providers/services/navigation.service';
 
 /**
  * Menu page.
@@ -18,17 +19,17 @@ export class MenuPage {
 
   /**
    * Menu page constructor.
-   * @param navCtrl Navigation controller to navigate to the options different pages.
+   * @param navigationService Navigation service to navigate through the app.
 
    */
-  constructor(private navCtrl: NavController) {
+  constructor(private navigationService: NavigationService) {
   }
 
   /**
    * 
    */
   public goToOption(pageToGo: string): void {
-    this.navCtrl.push(pageToGo);
+    this.navigationService.goTo(pageToGo);
   }
 
 }

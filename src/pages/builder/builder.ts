@@ -1,6 +1,6 @@
 //Basic
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, Navbar, NavController, LoadingController } from 'ionic-angular';
+import { IonicPage, Navbar, LoadingController } from 'ionic-angular';
 
 // Components
 import { WizardRoomModal } from '../../components/modals/wizard-room/wizard-room.modal';
@@ -10,6 +10,7 @@ import { RoomStore } from '../../providers/stores/room.store';
 import { AlertService } from '../../providers/services/alert.service';
 import { ToastService } from '../../providers/services/toast.service';
 import { ModalService } from '../../providers/services/modal.service';
+import { NavigationService } from '../../providers/services/navigation.service';
 
 // Models
 import { RoomModel, RoomDraftModel } from '../../core/model/room.model';
@@ -44,13 +45,13 @@ export class BuilderPage {
   /**
    * Builder page constructor.
    * @param loadingController Controller to generate a loading dialog.
-   * @param navCtrl Navigation controller to navigate to the options pages.
    * @param roomStore Store for handling rooms.
+   * @param navigationService Navigation service to navigate through the app.
    * @param alertService Service to generate a dialog that presents users with information.
    * @param toastService Controller to generate & present light notifications.
    * @param modalService Service to generate & present a modal.
    */
-  constructor(private loadingController: LoadingController, private navCtrl: NavController, private roomStore: RoomStore, private alertService: AlertService, private toastService: ToastService, private modalService: ModalService) {
+  constructor(private loadingController: LoadingController, private navigationService: NavigationService, private roomStore: RoomStore, private alertService: AlertService, private toastService: ToastService, private modalService: ModalService) {
     const loading = this.loadingController.create({
       content: 'Loading rooms...'
     });
@@ -171,7 +172,7 @@ export class BuilderPage {
   }
 
   public openThings(room: RoomModel): void {
-    this.navCtrl.push('page-connect', { customSearchInput: room.customName, customSearch: room.id });
+    this.navigationService.goTo('page-connect', { customSearchInput: room.customName, customSearch: room.id });
   }
 
 }

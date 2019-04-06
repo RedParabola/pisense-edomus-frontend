@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiGenericProvider, ConfigurationService } from '../../core/core.module';
 
 // Services
+import { AuthService } from '../../providers/services/auth.service';
 
 // Models
 
@@ -23,9 +24,10 @@ export class ApiLinkProvider extends ApiGenericProvider {
   /**
    * ApiLinkProvider constructor
    * @param http Angular's http service to make calls against a server.
+   * @param authService Service to provide authentication
    */
-  constructor(http: HttpClient) {
-    super(`${prefixURLEndPoint}${apiBaseEndpoint}link`, http);
+  constructor(http: HttpClient, auth: AuthService) {
+    super(`${prefixURLEndPoint}${apiBaseEndpoint}link`, http, auth);
   }
 
   /**

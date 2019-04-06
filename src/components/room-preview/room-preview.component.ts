@@ -1,12 +1,12 @@
 // Basic
 import { Component, Input } from '@angular/core';
-import { NavController } from 'ionic-angular';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 // Stores
 import { ThingStore } from '../../providers/stores/thing.store';
 
 // Services
+import { NavigationService } from '../../providers/services/navigation.service';
 import { ToastService } from '../../providers/services/toast.service';
 
 // Models
@@ -76,11 +76,11 @@ export class RoomPreviewComponent {
   /**
    * Constructor to declare all the necesary to initialize the class.
    * @param sanitizer Controller to bypass the url for background images.
-   * @param navCtrl Navigation controller to navigate to the options pages.
    * @param thingStore Store for handling things.
+   * @param navigationService Navigation service to navigate through the app.
    * @param toastService Service used to show toasts.
    */
-  constructor(private navCtrl: NavController, private sanitizer: DomSanitizer, private thingStore: ThingStore, private toastService: ToastService) {
+  constructor(private sanitizer: DomSanitizer, private thingStore: ThingStore, private navigationService: NavigationService, private toastService: ToastService) {
   }
 
   /**
@@ -159,7 +159,7 @@ export class RoomPreviewComponent {
 
   public goToRoom(): void {
     if (!this.interactionDisabled) {
-      this.navCtrl.push('page-room', { roomId: this.room.id });
+      this.navigationService.goTo('page-room', { roomId: this.room.id });
     }
   }
 }
