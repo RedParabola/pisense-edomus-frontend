@@ -7,6 +7,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 //Services
 import { ApplicationService } from '../providers/services/application.service';
+import { LoggerService } from '../providers/services/logger.service';
 
 //Models
 import { PageModel } from '../core/model/page.model';
@@ -25,15 +26,16 @@ export class MyApp {
   /**
    * The root page where the application will start
    */
-  public rootPage: any = 'page-base-tabs';
+  public rootPage: any = 'page-login';
 
   /**
    * Constructor to declare all the necesary to initialize the class.
    * @param platform Used to get information about your current device.
    * @param splashScreen Service to access to de splashScreen functionallity.
    * @param applicationService Service to get the application main funtionallity.
+   * @param loggerService Logger service
    */
-  constructor(private platform: Platform, private splashScreen: SplashScreen, private applicationService: ApplicationService) {
+  constructor(private platform: Platform, private splashScreen: SplashScreen, private applicationService: ApplicationService, private loggerService: LoggerService) {
     // App set-up
     this._initializeApp();
   }
@@ -42,10 +44,12 @@ export class MyApp {
    * Main configurations of the app, here is configured all the related with the preconfiguration of the application.
    */
   private _initializeApp() {
-    this.applicationService.initilizeApplication().then(() => {
+    this.applicationService.initializeApplication().then(() => {
       if (this.platform.is('cordova')) {
         this.splashScreen.hide();
       }
+    }, () => {
+      this.loggerService.error(this, `App will not start correctly.`); 
     });
   }
 

@@ -17,6 +17,9 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/finally';
 
+// Services
+import { AuthService } from '../providers/services/auth.service';
+
 // Constants
 import { API_CONSTANTS } from '../core/constants/api.constants';
 
@@ -35,8 +38,9 @@ export class ApiGenericProvider {
    * ApiGenericProvider constructor
    * @param url URL to do the call to.
    * @param http HTTP service to do the calls.
+   * @param authService Service to provide authentication
    */
-  constructor(protected url: string, protected http: HttpClient) {
+  constructor(protected url: string, protected http: HttpClient, public auth: AuthService) {
     this.headers = {};
     this.headers[API_CONSTANTS.CONTENT_TYPE] = API_CONSTANTS.JSON;
   }
@@ -52,7 +56,7 @@ export class ApiGenericProvider {
     return this.http.get(id? `${this.url}${endpoint}/${encodeURIComponent(id)}`:`${this.url}${endpoint}`, { headers })
       .timeout(10000)
       .map(response => response)
-      .catch(this.handleError)
+      .catch((err) => this.handleError(err))
       .toPromise();
   }
 
@@ -68,7 +72,7 @@ export class ApiGenericProvider {
     return this.http.post(id? `${this.url}${endpoint}/${encodeURIComponent(id)}`:`${this.url}${endpoint}`, JSON.stringify(resource),  { headers })
       .timeout(10000)
       .map(response => response)
-      .catch(this.handleError)
+      .catch((err) => this.handleError(err))
       .toPromise();
   }
 
@@ -84,7 +88,7 @@ export class ApiGenericProvider {
     return this.http.put(id? `${this.url}${endpoint}/${encodeURIComponent(id)}`:`${this.url}${endpoint}`, JSON.stringify(resource),  { headers })
       .timeout(10000)
       .map(response => response)
-      .catch(this.handleError)
+      .catch((err) => this.handleError(err))
       .toPromise();
   }
 
@@ -99,7 +103,7 @@ export class ApiGenericProvider {
     return this.http.delete(`${this.url}${endpoint}/${encodeURIComponent(id)}`,  { headers })
       .timeout(10000)
       .map(response => response)
-      .catch(this.handleError)
+      .catch((err) => this.handleError(err))
       .toPromise();
   }
 
@@ -112,6 +116,9 @@ export class ApiGenericProvider {
       return Observable.throw(new ApiErrorTimeOut());
     } else if (error.status === 400) {
       return Observable.throw(new ApiErrorBadInput(error.json()));
+    } else if (error.status === 401) {
+      this.auth.onUnauthorizedRequest();
+      return Observable.throw(new ApiError());
     } else if (error.status === 404) {
       return Observable.throw(new ApiErrorNotFound());
     } else {

@@ -195,4 +195,9 @@ export class RoomStore {
     return promise;
   }
 
+  public cleanUserRooms(): Promise<any> {
+    this._currentRooms = [];
+    this._currentRoomsObservable.next([]);
+    return this.roomDB.removeAll();
+  }
 }

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiGenericProvider, ConfigurationService } from '../../core/core.module';
 
 // Services
+import { AuthService } from '../../providers/services/auth.service';
 
 // Models
 import { ThingModel, ThingDraftModel, AirConditionerModel, LightModel } from '../../core/model/thing.model';
@@ -26,9 +27,10 @@ export class ApiThingProvider extends ApiGenericProvider {
   /**
    * ApiThingProvider constructor
    * @param http Angular's http service to make calls against a server.
+   * @param authService Service to provide authentication
    */
-  constructor(http: HttpClient) {
-    super(`${prefixURLEndPoint}${apiBaseEndpoint}thing`, http);
+  constructor(http: HttpClient, auth: AuthService) {
+    super(`${prefixURLEndPoint}${apiBaseEndpoint}thing`, http, auth);
   }
 
   /**
