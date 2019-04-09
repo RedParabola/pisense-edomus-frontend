@@ -4,7 +4,6 @@ import { IonicPage, Navbar } from 'ionic-angular';
 
 //Services
 import { UserStore } from '../../providers/stores/user.store';
-import { ToastService } from '../../providers/services/toast.service';
 
 /**
  * Account page.
@@ -26,9 +25,8 @@ export class AccountPage {
   /**
    * Account page constructor.
    * @param userStore Store to handle user info.
-   * @param toastService Controller to generate & present light notifications.
    */
-  constructor(private userStore: UserStore, private toastService: ToastService) {
+  constructor(private userStore: UserStore) {
     this.account = this.userStore.getCurrentUser();
   }
 

@@ -1,18 +1,18 @@
-//Basic
+// Basic
 import { Injectable } from '@angular/core';
 
-//Api Services
+// Api Services
 import { UserDatabaseService } from '../db/user.service.db';
 import { ApiUserProvider } from '../api/api-user.service';
 
-//Services
+// Services
 import { RoomStore } from '../stores/room.store';
 import { ThingStore } from '../stores/thing.store';
 import { AuthService } from '../services/auth.service';
 import { LoggerService } from '../services/logger.service';
 
-//Models
-import { UserModel } from '../../core/model/user.model';
+// Models
+// import { UserModel } from '../../core/model/user.model';
 
 //Constants
 import { USER_CONSTANTS } from '../../core/constants/user.constants';
@@ -148,7 +148,8 @@ export class UserStore {
     });
     return promise;
   }
-  
+
+/*
   private _setRefreshTokenDate(token: string): void {
     // Set logic for refreshing the token.
     // 1. We need a refresh token.
@@ -156,4 +157,6 @@ export class UserStore {
     // 3. We want it to refresh 5-10 min before expiration date.
     // https://blog.angular-university.io/angular-jwt-authentication/ comments below :)
   }
+*/
+
 }

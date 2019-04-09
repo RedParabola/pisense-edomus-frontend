@@ -5,7 +5,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 // Services
 import { UserStore } from '../../providers/stores/user.store';
-import { AuthService } from '../../providers/services/auth.service';
 import { ToastService } from '../../providers/services/toast.service';
 
 /**
@@ -25,10 +24,9 @@ export class LoginPage implements OnInit {
    * @param loadingController Controller to generate a loading dialog.
    * @param formBuilder Builder for forms.
    * @param userStore Store to handle user info.
-   * @param authService Service to provide authentication
    * @param toastService Controller to generate & present light notifications.
    */
-  constructor(private loadingController: LoadingController, private formBuilder: FormBuilder, private userStore: UserStore, private authService: AuthService, private toastService: ToastService) {
+  constructor(private loadingController: LoadingController, private formBuilder: FormBuilder, private userStore: UserStore, private toastService: ToastService) {
   }
 
   ngOnInit() {

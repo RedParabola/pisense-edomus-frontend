@@ -5,7 +5,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TitleCasePipe } from '@angular/common';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { Storage, IonicStorageModule } from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 
 //Ionic Native

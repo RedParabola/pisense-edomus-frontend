@@ -54,10 +54,10 @@ export class ThingStore {
    * @param thingProvider Api thing provider
    * @param linkProvider Api link provider
    * @param authService Service to provide authentication
-   * @param networkStatusService Network status service
+   * @param networkStatus Network status service
    * @param loggerService logger service
    */
-  constructor(private roomStore: RoomStore, private thingDB: ThingDatabaseService, private thingProvider: ApiThingProvider, private linkProvider: ApiLinkProvider, public auth: AuthService, private networkStatusService: NetworkStatus, private loggerService: LoggerService) {
+  constructor(private roomStore: RoomStore, private thingDB: ThingDatabaseService, private thingProvider: ApiThingProvider, private linkProvider: ApiLinkProvider, public auth: AuthService, private networkStatus: NetworkStatus, private loggerService: LoggerService) {
     this._currentThingsObservable = new BehaviorSubject<ThingModel[]>([]);
     this._currentThings = [];
     this._networkSubscription = null;
@@ -73,7 +73,7 @@ export class ThingStore {
   public listenAuthenticationStatus(): void {
     this.auth.authenticationObserver().subscribe((status: boolean) => {
       if (status) {
-        this._networkSubscription = this.networkStatusService.onlineObserver().subscribe((isOnline) => {
+        this._networkSubscription = this.networkStatus.onlineObserver().subscribe((isOnline) => {
           this.isOnline = isOnline;
           this.synchronizeData();
         });

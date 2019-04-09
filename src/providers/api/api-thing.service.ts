@@ -7,7 +7,7 @@ import { ApiGenericProvider, ConfigurationService } from '../../core/core.module
 import { AuthService } from '../../providers/services/auth.service';
 
 // Models
-import { ThingModel, ThingDraftModel, AirConditionerModel, LightModel } from '../../core/model/thing.model';
+import { ThingModel, ThingDraftModel } from '../../core/model/thing.model';
 import { CommandAnswerModel } from '../../core/model/command-answer.model';
 import { CommandRequestModel } from '../../core/model/command-request.model';
 
@@ -124,6 +124,7 @@ export class ApiThingProvider extends ApiGenericProvider {
     return promise;
   }
 
+/*
   private getMockCommandAnswer(command: CommandRequestModel): CommandAnswerModel {
     const commandAnswer: CommandAnswerModel = {
       commandRequest: command,
@@ -180,5 +181,6 @@ export class ApiThingProvider extends ApiGenericProvider {
     ];
     return thingList;
   }
+*/
 
 }

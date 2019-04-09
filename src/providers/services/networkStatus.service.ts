@@ -23,35 +23,31 @@ export class NetworkStatus {
   private _currentNetworkStateCordova: boolean;
 
   /**
+   * the current network type, whether it is 'data', 'lan' or 'none'
+   */
+  private _networkType: string;
+
+  /**
    * Constructor where we import all needed in the service.
    * @param network plugin to know if the device is connected
    * @param platform Used to get information about your current device.
    */
   constructor(private network: Network, private platform: Platform) {
-    // Dont care about the first state of the app, lets suppose that is online
-    this._onlineObserver = new BehaviorSubject(true);
-    this.platform.ready().then(() => { //We need to ensure that the plugins have been loaded (firefox issue)
-      if (this.platform.is('cordova')) {
-        this.network.type === 'none' ? this._onlineObserver.next(false) : this._onlineObserver.next(true);
-        this.network.onchange().subscribe((status) => {
-          if (status.type === 'online') {
-            this._onlineObserver.next(true);
-            this._currentNetworkStateCordova = true;
-          } else {
-            this._onlineObserver.next(false);
-            this._currentNetworkStateCordova = false;
-          }
-        });
-      } else {
-        this._onlineObserver.next(navigator.onLine);
-        this._onOnline(() => {
-          this._onlineObserver.next(true);
-        });
-        this._onOffline(() => {
-          this._onlineObserver.next(false);
-        });
-      }
-    });
+    this._onlineObserver = new BehaviorSubject(false);
+    this._networkType = 'none';
+  }
+
+  public init(): void {
+    if (this.platform.is('cordova')) {
+      this.network.onchange().subscribe((status) => {
+        this._setStatusByNetworkType();
+        status.type === 'online'? this._onOnline(): this._onOffline();
+      });
+    } else {
+      this._onlineObserver.next(navigator.onLine);
+      window.addEventListener('online', () => { this._onOnline() }, false);
+      window.addEventListener('offline', () => { this._onOffline() }, false);
+    }
   }
 
   /**
@@ -83,27 +79,48 @@ export class NetworkStatus {
     return this._onlineObserver.asObservable();
   }
 
+  public isDataNetwork(): boolean {
+    return this._networkType === 'data';
+  }
+
+  public isLAN(): boolean {
+    return this._networkType === 'lan';
+  }
+
+  //unknown, ethernet, wifi, 2g, 3g, 4g, cellular, none
+  private _setStatusByNetworkType(): void {
+    switch (this.network.type) {
+      case '2g'||'3g'||'4g'||'cellular':
+        this._networkType = 'data';
+        break;
+      case 'ethernet'||'wifi':
+        this._networkType = 'lan';
+        break;
+      case 'unknown'||'none':
+        this._networkType = 'none';
+        break;
+      default:
+        break;
+    }
+  }
+
   /**
    * Register a new callback to be executed when network turns up.
-   * @param cb callback
    */
-  private _onOnline(cb: any): Function {
-    let listener = cb;
-    window.addEventListener('online', listener, false);
-    return function deregisterOnOnline() {
-      window.removeEventListener('online', listener);
-    };
+  private _onOnline(): void {
+    if (this.platform.is('cordova')) {
+      this._currentNetworkStateCordova = true;
+    }
+    this._onlineObserver.next(true);
   }
 
   /**
    * Register a new callback to be executed when network turns down.
-   * @param cb callback
    */
-  private _onOffline(cb: any): Function {
-    let listener = cb;
-    window.addEventListener('offline', listener, false);
-    return function deregisterOnOffline() {
-      window.removeEventListener('offline', listener);
-    };
+  private _onOffline(): void {
+    if (this.platform.is('cordova')) {
+      this._currentNetworkStateCordova = false;
+    }
+    this._onlineObserver.next(false);
   }
 }

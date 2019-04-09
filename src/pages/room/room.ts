@@ -6,8 +6,6 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 // Services
 import { RoomStore } from '../../providers/stores/room.store';
 import { ThingStore } from '../../providers/stores/thing.store';
-import { AlertService } from '../../providers/services/alert.service';
-import { ToastService } from '../../providers/services/toast.service';
 
 // Models
 import { RoomModel } from '../../core/model/room.model';
@@ -45,10 +43,8 @@ export class RoomPage {
    * @param sanitizer Controller to bypass the url for background images.
    * @param roomStore Store for handling rooms.
    * @param thingStore Store for handling things.
-   * @param alertService Service to generate a dialog that presents users with information.
-   * @param toastService Service to generate & present light notifications.
    */
-  constructor(private loadingController: LoadingController, public navParams: NavParams, private sanitizer: DomSanitizer, private roomStore: RoomStore, private thingStore: ThingStore, private alertService: AlertService, private toastService: ToastService) {
+  constructor(private loadingController: LoadingController, public navParams: NavParams, private sanitizer: DomSanitizer, private roomStore: RoomStore, private thingStore: ThingStore) {
     const loading = this.loadingController.create({
       content: 'Loading room...'
     });

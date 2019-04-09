@@ -8,9 +8,6 @@ import { AuthService } from '../../providers/services/auth.service';
 
 // Models
 import { RoomModel, RoomDraftModel } from '../../core/model/room.model';
-import { LightModel, AirConditionerModel, ThingModel } from '../../core/model/thing.model';
-
-// Constants
 
 /**
  * Constants speficying Url to make calls to.
@@ -51,10 +48,10 @@ export class ApiRoomProvider extends ApiGenericProvider {
   }
 
   /**
- * Function that creates a new room.
- * @param roomInfo Room information.
- * @return newly created room.
- */
+   * Function that creates a new room.
+   * @param roomInfo Room information.
+   * @return newly created room.
+   */
   public createRoom(roomInfo: RoomDraftModel): Promise<RoomModel> {
     let promise = new Promise<RoomModel>((resolve, reject) => {
       this.create('', roomInfo).then(
@@ -103,6 +100,7 @@ export class ApiRoomProvider extends ApiGenericProvider {
     return promise;
   }
 
+/*
   private getMockRooms(): RoomModel[] {
     const roomList: RoomModel[] = [
       {
@@ -172,4 +170,6 @@ export class ApiRoomProvider extends ApiGenericProvider {
     ];
     return roomList;
   }
+*/
+
 }
