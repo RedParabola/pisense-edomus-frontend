@@ -1,6 +1,6 @@
 //Basic
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, Navbar, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, Navbar, NavParams } from 'ionic-angular';
 
 // Components
 import { WizardThingModal } from '../../components/modals/wizard-thing/wizard-thing.modal';
@@ -10,6 +10,7 @@ import { WizardLinkModal } from '../../components/modals/wizard-link/wizard-link
 import { RoomStore } from '../../providers/stores/room.store';
 import { ThingStore } from '../../providers/stores/thing.store';
 import { AlertService } from '../../providers/services/alert.service';
+import { LoadingService } from '../../providers/services/loading.service';
 import { ToastService } from '../../providers/services/toast.service';
 import { ModalService } from '../../providers/services/modal.service';
 
@@ -56,19 +57,18 @@ export class ConnectPage {
 
   /**
    * Connect page constructor.
-   * @param loadingController Controller to generate a loading dialog.
    * @param navParams navigation parameters.
    * @param roomStore Store for handling rooms.
    * @param thingStore Store for handling things.
    * @param alertService Service to generate a dialog that presents users with information.
-   * @param toastService Service to generate & present light notifications.
+   * @param loadingService Service used to generate a loading dialog
+   * @param toastService Service used to show toasts.
    * @param modalService Service to generate & present a modal.
    */
-  constructor(private loadingController: LoadingController, public navParams: NavParams, private roomStore: RoomStore, private thingStore: ThingStore, private alertService: AlertService, private toastService: ToastService, private modalService: ModalService) {
-    const loading = this.loadingController.create({
+  constructor(public navParams: NavParams, private roomStore: RoomStore, private thingStore: ThingStore, private alertService: AlertService,  private loadingService: LoadingService, private toastService: ToastService, private modalService: ModalService) {
+    this.loadingService.show({
       content: 'Loading things...'
     });
-    loading.present();
     this.searchQuery = this.navParams.get('customSearch');
     this.searchQueryInput = this.navParams.get('customSearchInput');
     this.listedThings = [];
@@ -86,7 +86,7 @@ export class ConnectPage {
         }
       }
     );
-    this.thingStore.thingsChange().filter(array => !!array.length).first().subscribe(() => loading.dismiss());
+    this.thingStore.thingsChange().filter(array => !!array.length).first().subscribe(() => this.loadingService.dismiss());
   }
 
   private extendRetrievedThings(): void {

@@ -1,20 +1,20 @@
 //Basic
 import { Injectable } from '@angular/core';
+import { ConfigurationService } from '../../core/configuration.service';
 
 //Api Services
 import { ApplicationDataDatabaseService } from '../db/application-data.service.db';
 
 //Services
-import { LoggerService } from '../services/logger.service'
-
-//Models
-import { TimerSettingModel } from '../../core/model/timer-setting.model';
+import { NetworkService } from '../services/network.service';
 
 //Constants
 import { APPLICATION_CONSTANTS } from '../../core/constants/application-data.constants';
 
-//Moment
-import * as moment from 'moment';
+/**
+ * Constants speficying Url to make calls to.
+ */
+const { domainURLEndPoint, isHttpsProtocol, apiBaseEndpoint, jwtBlacklistedRoutes } = ConfigurationService.environment.$apiConfig;
 
 /**
  * Store to handle general application data.
@@ -23,98 +23,21 @@ import * as moment from 'moment';
 export class ApplicationDataStore {
 
   /**
-   * stores the number of attempts and the next date to be asked
+   * local api endpoint
    */
-  private currentPrivacyTimer: TimerSettingModel;
+  private localApiEndpoint: string;
+
+  /**
+   * remote api endpoint
+   */
+  private remoteApiEndpoint: string;
 
   /**
    * Constructor to declare all the necesary to initialize the class.
    * @param appDataDB application data database access.
-   * @param loggerService logger service
+   * @param networkService Network status service
    */
-  constructor(private appDataDB: ApplicationDataDatabaseService, private loggerService: LoggerService) {
-    this.initPrivacyPermission();
-  }
-
-  /**
-   * Initialize currentPrivacyTimer from the DB | first time 
-   */
-  private initPrivacyPermission(): void {
-    this.appDataDB.get(APPLICATION_CONSTANTS.PRIVACY_POPUP_STATUS).then(
-      (answer: TimerSettingModel) => {
-        this.currentPrivacyTimer = answer;
-      }, (error) => {
-        let timerFirstTimeSettings: TimerSettingModel = this.getStartingTimer();
-        this.appDataDB.set(APPLICATION_CONSTANTS.PRIVACY_POPUP_STATUS, timerFirstTimeSettings).then(
-          (answer) => {
-            this.currentPrivacyTimer = timerFirstTimeSettings;
-          }, (error) => {
-            this.loggerService.error(this, `AppDataDB SET FAIL for: ${APPLICATION_CONSTANTS.PRIVACY_POPUP_STATUS} ${timerFirstTimeSettings}.`);
-          });
-      });
-  }
-
-  /**
-   * Use to get a default starting timer.
-   */
-  private getStartingTimer(): TimerSettingModel {
-    let timerFirstTimeSettings: TimerSettingModel = <TimerSettingModel>{
-      timerDate: undefined,
-      attempts: 0
-    };
-    return timerFirstTimeSettings;
-  }
-
-  /**
-   * Search if the app should ask for permissions again
-   */
-  public shouldAskPrivacyPermission(): boolean {
-    let shouldAsk: boolean = true;
-    if (this.currentPrivacyTimer.attempts === 3) {
-      //3 attempts, should never ask again
-      shouldAsk = false;
-    } else {
-      if (!this.currentPrivacyTimer.timerDate) {
-        //first time since reset
-        shouldAsk = true;
-      } else {
-        //compare current date to stored date
-        let currentDate: number = moment().valueOf();
-        let timerDate: number = this.currentPrivacyTimer.timerDate;
-        shouldAsk = (currentDate >= timerDate);
-      }
-    }
-    return shouldAsk;
-  }
-
-  /**
-   * Delays the timer inside currentPrivacyTimer to fit the next attempt
-   */
-  public delayPrivacyPermission(): void {
-    this.currentPrivacyTimer.attempts++;
-    //this.currentPrivacyTimer.timerDate = moment().valueOf() + 2592000000 * this.currentPrivacyTimer.attempts;
-    this.currentPrivacyTimer.timerDate = moment().valueOf() + 60000 * this.currentPrivacyTimer.attempts;
-    this.setPrivacyTimer();
-  }
-
-  /**
-   *  Resets privacy permissions
-   */
-  public resetPrivacyPermission(): void {
-    this.currentPrivacyTimer = this.getStartingTimer();
-    this.setPrivacyTimer();
-  }
-
-  /**
-   * Set the privacyTimer in the DB
-   */
-  public setPrivacyTimer(): void {
-    this.appDataDB.set(APPLICATION_CONSTANTS.PRIVACY_POPUP_STATUS, this.currentPrivacyTimer).then(
-      (answer) => {
-        this.loggerService.info(this, `AppDataDB SET SUCCESS for: ${APPLICATION_CONSTANTS.PRIVACY_POPUP_STATUS} ${this.currentPrivacyTimer}.`);
-      }, (error) => {
-        this.loggerService.error(this, `AppDataDB SET FAIL for: ${APPLICATION_CONSTANTS.PRIVACY_POPUP_STATUS} ${this.currentPrivacyTimer}.`);
-      });
+  constructor(private appDataDB: ApplicationDataDatabaseService, private networkService: NetworkService) {
   }
 
   /**
@@ -148,5 +71,63 @@ export class ApplicationDataStore {
       )
     });
     return promise;
+  }
+
+  public initializeApiEndpoints(): Promise<any> {
+    const promise: Promise<any> = new Promise<any>((resolve, reject) => {
+      this.appDataDB.get(APPLICATION_CONSTANTS.CUSTOM_API_ENDPOINT).then(
+        (answer: any) => {
+          this._setNetworkUrls(answer.local, answer.remote);
+          console.log('API Endpoints located and loaded.');
+          resolve();
+        }, (error) => {
+          this._setNetworkUrls(domainURLEndPoint, domainURLEndPoint);
+          console.log('Could not find API Endpoints. Loading default local server value.');
+          resolve();
+        }
+      );
+    });
+    return promise;
+  }
+
+  public storeApiEndpoints(local: string, remote: string): Promise<any> {
+    const promise: Promise<any> = new Promise<any>((resolve, reject) => {
+      this.appDataDB.set(APPLICATION_CONSTANTS.CUSTOM_API_ENDPOINT, {local, remote}).then(
+        (answer: any) => {
+          this.localApiEndpoint = answer.local;
+          this.remoteApiEndpoint = answer.remote;
+          console.log('New API Endpoints were linked to the app. A restart is needed.');
+          resolve();
+        }, (error) => {
+          reject();
+        }
+      );
+    });
+    return promise;
+  }
+
+  public getWhitelistedDomains(): string[] {
+    const domains: string[] = [
+      this.localApiEndpoint,
+      this.remoteApiEndpoint
+    ]
+    return domains;
+  }
+
+  public getBlacklistedRoutes(): string[] {
+    const domains: string[] = [];
+    jwtBlacklistedRoutes.forEach(element => {
+      domains.push(this.localApiEndpoint + '/' + apiBaseEndpoint + element);
+      domains.push(this.remoteApiEndpoint + '/' + apiBaseEndpoint + element);
+    });
+    return domains;
+  }
+
+  private _setNetworkUrls(local: string, remote: string): void {
+    this.localApiEndpoint = local;
+    this.remoteApiEndpoint = remote;
+    const finalLocalEndpoint: string = isHttpsProtocol? 'https://' + local + '/' : 'http://' + local + '/';
+    const finalRemoteEndpoint: string = isHttpsProtocol? 'https://' + remote + '/' : 'http://' + remote + '/';
+    this.networkService.setNetworkUrls(finalLocalEndpoint, finalRemoteEndpoint);
   }
 }

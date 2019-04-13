@@ -1,18 +1,14 @@
 // Basic
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ApiGenericProvider, ConfigurationService } from '../../core/core.module';
+import { ApiGenericProvider } from '../../core/core.module';
 
 // Services
+import { NetworkService } from '../../providers/services/network.service';
 import { AuthService } from '../../providers/services/auth.service';
 
 // Models
 import { RoomModel, RoomDraftModel } from '../../core/model/room.model';
-
-/**
- * Constants speficying Url to make calls to.
- */
-const { prefixURLEndPoint, apiBaseEndpoint } = ConfigurationService.environment.$apiConfig;
 
 /**
  * Service that returns room information from server.
@@ -23,10 +19,11 @@ export class ApiRoomProvider extends ApiGenericProvider {
   /**
    * ApiRoomProvider constructor
    * @param http Angular's http service to make calls against a server.
+   * @param networkService Network status service
    * @param authService Service to provide authentication
    */
-  constructor(http: HttpClient, auth: AuthService) {
-    super(`${prefixURLEndPoint}${apiBaseEndpoint}room`, http, auth);
+  constructor(http: HttpClient, networkService: NetworkService, auth: AuthService) {
+    super('room', http, networkService, auth);
   }
 
   /**

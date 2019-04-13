@@ -10,7 +10,7 @@ import { ThingStore } from '../../providers/stores/thing.store';
 import { OfflineReminder } from '../../shared/shared.module';
 import { LoggerService } from './logger.service';
 import { ConfigurationService } from '../../core/configuration.service';
-import { NetworkStatus } from '../services/networkStatus.service';
+import { NetworkService } from '../services/network.service';
 import { NavigationService } from './navigation.service';
 
 /**
@@ -37,10 +37,10 @@ export class ApplicationService {
    * @param thingStore Store for handling things.
    * @param offlineReminder Service used to feedback that the app is offline
    * @param loggerService Logger service
-   * @param networkStatus Network status service
+   * @param networkService Network status service
    * @param navigationService Navigation service to navigate through the app.
    */
-  constructor(private platform: Platform, private userStore: UserStore, private roomStore: RoomStore, private thingStore: ThingStore, private offlineReminder: OfflineReminder, private loggerService: LoggerService, private networkStatus: NetworkStatus, private navigationService: NavigationService) {
+  constructor(private platform: Platform, private userStore: UserStore, private roomStore: RoomStore, private thingStore: ThingStore, private offlineReminder: OfflineReminder, private loggerService: LoggerService, private networkService: NetworkService, private navigationService: NavigationService) {
     this._isReady = new BehaviorSubject(false);
   }
 
@@ -88,7 +88,7 @@ export class ApplicationService {
     if (isProduction) {
       this.loggerService.setProductionMode();
     }
-    this.networkStatus.init();
+    this.networkService.init();
     this.offlineReminder.init();
     this.navigationService.init();
     return Promise.resolve(); 
@@ -135,4 +135,7 @@ export class ApplicationService {
     return promise;
   }
 
+  public closeApp(): void {
+    this.platform.exitApp();
+  }
 }

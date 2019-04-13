@@ -1,10 +1,13 @@
 // Basic
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, LoadingController } from 'ionic-angular';
+import { IonicPage } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 // Services
+import { ApplicationDataStore } from '../../providers/stores/application-data.store';
 import { UserStore } from '../../providers/stores/user.store';
+import { ApplicationService } from '../../providers/services/application.service';
+import { LoadingService } from '../../providers/services/loading.service';
 import { ToastService } from '../../providers/services/toast.service';
 
 /**
@@ -21,12 +24,14 @@ export class LoginPage implements OnInit {
  
   /**
    * Login page constructor.
-   * @param loadingController Controller to generate a loading dialog.
    * @param formBuilder Builder for forms.
+   * @param appDataStore Used to access to stored application info such as unique device id.
    * @param userStore Store to handle user info.
-   * @param toastService Controller to generate & present light notifications.
+   * @param applicationService Service to get the application main functionality.
+   * @param loadingService Service used to generate a loading dialog
+   * @param toastService Service used to show toasts.
    */
-  constructor(private loadingController: LoadingController, private formBuilder: FormBuilder, private userStore: UserStore, private toastService: ToastService) {
+  constructor(private formBuilder: FormBuilder, private appDataStore: ApplicationDataStore, private userStore: UserStore, private applicationService: ApplicationService, private loadingService: LoadingService, private toastService: ToastService) {
   }
 
   ngOnInit() {
@@ -40,34 +45,47 @@ export class LoginPage implements OnInit {
     this.login(this.credentialsForm.value);
   }
 
-  register() {
-    const loading = this.loadingController.create({
+  public register(): void {
+    this.loadingService.show({
       content: 'Registering...'
     });
-    loading.present();
     this.userStore.registerUser(this.credentialsForm.value).then(
       () => {
-        loading.dismiss();
+        this.loadingService.dismiss();
         this.toastService.showToast({ message: 'Register successful!' })
         this.login(this.credentialsForm.value);
       }, () => {
-        loading.dismiss();
+        this.loadingService.dismiss();
         this.toastService.showToast({ message: 'Register process failed. Try again later.' });
       }
     );
   }
 
-  login(credentials: any) {
-    const loading = this.loadingController.create({
+  public login(credentials: any): void {
+    this.loadingService.show({
       content: 'Logging...'
     });
-    loading.present();
     this.userStore.loginUser(credentials).then(
-      () => loading.dismiss(),
+      () => this.loadingService.dismiss(),
       () => {
-        loading.dismiss();
+        this.loadingService.dismiss();
         this.toastService.showToast({ message: 'Could not login. Try again later.' });
     });
   }
 
+  public linkServer(): void {
+    this.loadingService.show({
+      content: 'Linking server...'
+    });
+    this.appDataStore.storeApiEndpoints('loler.lolenz.scr:3000', 'mundoloco.casaputas:3000').then(
+      () => {
+        this.loadingService.setContent("Link successful! App will autoclose in 10 seconds in order to use the new server settings... Please restart the App :)");
+        setTimeout(() => {
+          this.applicationService.closeApp();
+        }, 10000);
+      }, () => {
+        this.loadingService.dismiss();
+        this.toastService.showToast({ message: 'Could not link the server.' });
+    });
+  }
 }

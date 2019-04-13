@@ -1,10 +1,11 @@
 // Basic
 import { Component } from '@angular/core';
-import { IonicPage, LoadingController } from 'ionic-angular';
+import { IonicPage } from 'ionic-angular';
 
 // Services
 import { RoomStore } from '../../providers/stores/room.store';
 import { ThingStore } from '../../providers/stores/thing.store';
+import { LoadingService } from '../../providers/services/loading.service';
 
 // Models
 import { RoomModel } from '../../core/model/room.model';
@@ -34,18 +35,17 @@ export class HomePage {
 
   /**
    * Home page constructor.
-   * @param loadingController Controller to generate a loading dialog.
    * @param roomStore Store for handling rooms
    * @param thingStore Store for handling things.
+   * @param loadingService Service used to generate a loading dialog
    */
-  constructor(private loadingController: LoadingController, private roomStore: RoomStore, private thingStore: ThingStore) {
+  constructor(private roomStore: RoomStore, private thingStore: ThingStore, private loadingService: LoadingService) {
     this.shownRooms = [];
     this.retrievedRooms = [];
     this.retrievedThings = [];
-    const loading = this.loadingController.create({
+    this.loadingService.show({
       content: 'Loading rooms...'
     });
-    loading.present();
     this.roomStore.roomsChange().subscribe(
       (storeRooms: RoomModel[]) => {
         this.retrievedRooms = storeRooms;
@@ -56,7 +56,7 @@ export class HomePage {
         this.retrievedThings = storeThings;
         this.indexThingsInRooms();
       });
-    this.roomStore.roomsChange().filter(array => !!array.length).first().subscribe(() => loading.dismiss());
+    this.roomStore.roomsChange().filter(array => !!array.length).first().subscribe(() => this.loadingService.dismiss());
   }
 
   private indexThingsInRooms(): void {

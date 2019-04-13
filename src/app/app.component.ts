@@ -32,7 +32,7 @@ export class MyApp {
    * Constructor to declare all the necesary to initialize the class.
    * @param platform Used to get information about your current device.
    * @param splashScreen Service to access to de splashScreen functionallity.
-   * @param applicationService Service to get the application main funtionallity.
+   * @param applicationService Service to get the application main functionality.
    * @param loggerService Logger service
    */
   constructor(private platform: Platform, private splashScreen: SplashScreen, private applicationService: ApplicationService, private loggerService: LoggerService) {

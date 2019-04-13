@@ -1,6 +1,7 @@
 //Basic
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConfigurationService } from '../core/configuration.service';
 
 //Errors
 import { ApiError } from './api-error/api-error';
@@ -18,10 +19,16 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/finally';
 
 // Services
+import { NetworkService } from '../providers/services/network.service';
 import { AuthService } from '../providers/services/auth.service';
 
 // Constants
 import { API_CONSTANTS } from '../core/constants/api.constants';
+
+/**
+ * Constants speficying Url to make calls to.
+ */
+const { domainURLEndPoint, apiBaseEndpoint } = ConfigurationService.environment.$apiConfig;
 
 /**
  * Generic class for API management
@@ -35,14 +42,31 @@ export class ApiGenericProvider {
   private headers: any;
 
   /**
+   * URL to do the call to.
+   */
+  private url: string;
+
+  /**
    * ApiGenericProvider constructor
-   * @param url URL to do the call to.
+   * @param serviceEndpoint service endpoint to append to url.
    * @param http HTTP service to do the calls.
+   * @param networkService Network status service
    * @param authService Service to provide authentication
    */
-  constructor(protected url: string, protected http: HttpClient, public auth: AuthService) {
+  constructor(protected serviceEndpoint: string, protected http: HttpClient, protected networkService: NetworkService, protected auth: AuthService) {
     this.headers = {};
     this.headers[API_CONSTANTS.CONTENT_TYPE] = API_CONSTANTS.JSON;
+    this.networkService.onlineObserver().subscribe((isOnline) => {
+      if (isOnline) {
+        if (this.networkService.isDataNetwork()) {
+          this.url = `${this.networkService.getRemoteNetworkUrl()}${apiBaseEndpoint}${serviceEndpoint}`;
+        } else if (this.networkService.isLAN()) {
+          this.url =`${this.networkService.getLocalNetworkUrl()}${apiBaseEndpoint}${serviceEndpoint}`;
+        } else {
+          this.url =`http://${domainURLEndPoint}/${apiBaseEndpoint}${serviceEndpoint}`;
+        }
+      }
+    });
   }
 
   /**

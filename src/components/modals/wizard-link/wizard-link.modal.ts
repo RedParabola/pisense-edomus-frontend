@@ -1,10 +1,11 @@
 // Basic
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, Slides, NavParams, LoadingController } from 'ionic-angular';
+import { ViewController, Slides, NavParams } from 'ionic-angular';
 
 // Services
 import { RoomStore } from '../../../providers/stores/room.store';
 import { ThingStore } from '../../../providers/stores/thing.store';
+import { LoadingService } from '../../../providers/services/loading.service';
 import { ToastService } from '../../../providers/services/toast.service';
 
 // Models
@@ -46,14 +47,14 @@ export class WizardLinkModal {
 
   /**
    * Constructor to declare all the necesary to initialize the class.
-   * @param loadingController Controller to generate a loading dialog.
    * @param viewCtrl Controller to handle the current shown modal.
    * @param navParams navigation parameters.
    * @param roomStore Store for handling rooms.
    * @param thingStore Store for handling things.
-   * @param toastService Controller to generate & present light notifications.
+   * @param loadingService Service used to generate a loading dialog
+   * @param toastService Service used to show toasts.
    */
-  constructor(private loadingController: LoadingController, public viewCtrl: ViewController, public navParams: NavParams, private roomStore: RoomStore, private thingStore: ThingStore, private toastService: ToastService) {
+  constructor(public viewCtrl: ViewController, public navParams: NavParams, private roomStore: RoomStore, private thingStore: ThingStore, private loadingService: LoadingService, private toastService: ToastService) {
     this.currentSlide = 0;
     this.linkingThing = this.navParams.get('linkingThing');
     this.roomList = [];
@@ -118,18 +119,17 @@ export class WizardLinkModal {
   }
 
   private closeAndFinish() {
-    const loading = this.loadingController.create({
+    this.loadingService.show({
       content: 'Linking...'
     });
-    loading.present();
     this.thingStore.linkRoom(this.linkingThing, this.finalConfiguration.room.id).then(
       () => {
         this.toastService.showToast({ message: `'${this.linkingThing.customName}' successfully linked to '${this.finalConfiguration.room.customName}'.` });
-        loading.dismiss();
+        this.loadingService.dismiss();
       },
       error => {
         this.toastService.showToast({ message: error });
-        loading.dismiss();
+        this.loadingService.dismiss();
       }
     );
     this.viewCtrl.dismiss();

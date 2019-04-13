@@ -29,6 +29,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 //Shared modules
 import { SharedModule, MediaService } from '../shared/shared.module';
+import { CoreModule } from '../core/core.module';
 
 //App
 import { MyApp } from './app.component';
@@ -43,15 +44,15 @@ import { ApiThingProvider } from '../providers/api/api-thing.service';
 import { ApiLinkProvider } from '../providers/api/api-link.service';
 
 //Services
-import { ConfigurationService } from '../core/core.module';
 import { ResponsiveModule, ResponsiveConfig } from 'ng2-responsive';
 import { InAppBrowserService } from '../providers/services/inAppBrowser.service'
 import { StorageService } from '../providers/services/storage.service';
-import { NetworkStatus } from '../providers/services/networkStatus.service';
+import { NetworkService } from '../providers/services/network.service';
 import { UniqueDeviceIDService } from '../providers/services/unique-device-id.service';
 import { AuthService } from '../providers/services/auth.service';
 import { NavigationService } from '../providers/services/navigation.service';
 import { ApplicationService } from '../providers/services/application.service';
+import { LoadingService } from '../providers/services/loading.service';
 import { ToastService } from '../providers/services/toast.service';
 import { AlertService } from '../providers/services/alert.service';
 import { ModalService } from '../providers/services/modal.service';
@@ -92,7 +93,7 @@ export function provideMedia() {
   return new MediaService(mediaConfig);
 }
 
-export function jwtOptionsFactory(userDB) {
+export function jwtOptionsFactory(applicationDataStore, userDB) {
   return {
     tokenGetter: () => {
       return new Promise <string> ((resolve, reject) => {
@@ -102,15 +103,8 @@ export function jwtOptionsFactory(userDB) {
         );
       });
     },
-    whitelistedDomains: [
-      ConfigurationService.environment.$apiConfig.domainURLEndPoint
-    ],
-    blacklistedRoutes: [
-      ConfigurationService.environment.$apiConfig.domainURLEndPoint
-      + '/api/user/login',
-      ConfigurationService.environment.$apiConfig.domainURLEndPoint
-      + '/api/user/register',
-    ]
+    whitelistedDomains: applicationDataStore.getWhitelistedDomains(),
+    blacklistedRoutes: applicationDataStore.getBlacklistedRoutes(),
   }
 }
 
@@ -132,7 +126,7 @@ export function jwtOptionsFactory(userDB) {
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
         useFactory: jwtOptionsFactory,
-        deps: [UserDatabaseService],
+        deps: [ApplicationDataStore, UserDatabaseService],
       }
     }),
     ResponsiveModule,
@@ -145,7 +139,8 @@ export function jwtOptionsFactory(userDB) {
       }
     }),
     IonicStorageModule.forRoot(),
-    SharedModule
+    SharedModule,
+    CoreModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -178,12 +173,13 @@ export function jwtOptionsFactory(userDB) {
     //Singleton services
     InAppBrowserService,
     OfflineReminder,
-    NetworkStatus,
+    NetworkService,
     UniqueDeviceIDService,
     StorageService,
     AuthService,
     NavigationService,
     ApplicationService,
+    LoadingService,
     ToastService,
     AlertService,
     ModalService,

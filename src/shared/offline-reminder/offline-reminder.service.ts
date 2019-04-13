@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 
 //Services
-import { NetworkStatus } from '../../providers/services/networkStatus.service';
+import { NetworkService } from '../../providers/services/network.service';
 
 /**
  * Service to create the offline reminder.
@@ -17,9 +17,9 @@ export class OfflineReminder {
 
   /**
    * Constructor to declare all the necesary to initialize the class.
-   * @param networkStatus Network status provider
+   * @param networkService Network status provider
    */
-  constructor(private networkStatus: NetworkStatus) {
+  constructor(private networkService: NetworkService) {
     //create the div element
     this.element = document.createElement('div');
     this.element.classList.add('offline-reminder');
@@ -40,7 +40,7 @@ export class OfflineReminder {
    * Method to initialize the offline reminder service
    */
   public init() {
-    this.networkStatus.onlineObserver().subscribe((isOnline) => {
+    this.networkService.onlineObserver().subscribe((isOnline) => {
       isOnline ? this._isOnline() : this._isOffline();
     });
   }

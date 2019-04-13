@@ -8,10 +8,10 @@
   },
   "html5BaseHref": "/",
   "$apiConfig": {
-    "domainURLEndPoint": "192.168.0.120:3000",
-    "prefixURLEndPoint": "http://192.168.0.120:3000/",
-    "securityEndpoint": "",
+    "domainURLEndPoint": "localhost:3000",
+    "isHttpsProtocol": false,
     "apiBaseEndpoint": "api/",
-    "apiVersion": ""
+    "apiVersion": "",
+    "jwtBlacklistedRoutes": ["user/login", "user/register"]
   }
 }

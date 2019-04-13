@@ -1,20 +1,14 @@
 // Basic
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ApiGenericProvider, ConfigurationService } from '../../core/core.module';
+import { ApiGenericProvider } from '../../core/core.module';
 
 // Services
+import { NetworkService } from '../../providers/services/network.service';
 import { AuthService } from '../../providers/services/auth.service';
 
 // Models
 import { UserModel } from '../../core/model/user.model';
-
-// Constants
-
-/**
- * Constants speficying Url to make calls to.
- */
-const { prefixURLEndPoint, apiBaseEndpoint } = ConfigurationService.environment.$apiConfig;
 
 /**
  * Service that handles user information into/from server.
@@ -25,10 +19,11 @@ export class ApiUserProvider extends ApiGenericProvider {
   /**
    * ApiUserProvider constructor
    * @param http Angular's http service to make calls against a server.
+   * @param networkService Network status service
    * @param authService Service to provide authentication
    */
-  constructor(http: HttpClient, auth: AuthService) {
-    super(`${prefixURLEndPoint}${apiBaseEndpoint}user`, http, auth);
+  constructor(http: HttpClient, networkService: NetworkService, auth: AuthService) {
+    super('user', http, networkService, auth);
   }
 
   /**

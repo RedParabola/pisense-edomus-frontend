@@ -22,7 +22,7 @@ export class AuthService {
   /**
    * Constructor to declare all the necesary to initialize the class.
    * @param helper 
-   * @param toastService Controller to generate & present light notifications.
+   * @param toastService Service used to show toasts.
    * @param loggerService logger service
    */
   constructor(private helper: JwtHelperService, private toastService: ToastService, private loggerService: LoggerService) {

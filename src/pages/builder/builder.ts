@@ -1,6 +1,6 @@
 //Basic
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, Navbar, LoadingController } from 'ionic-angular';
+import { IonicPage, Navbar } from 'ionic-angular';
 
 // Components
 import { WizardRoomModal } from '../../components/modals/wizard-room/wizard-room.modal';
@@ -8,6 +8,7 @@ import { WizardRoomModal } from '../../components/modals/wizard-room/wizard-room
 // Services
 import { RoomStore } from '../../providers/stores/room.store';
 import { AlertService } from '../../providers/services/alert.service';
+import { LoadingService } from '../../providers/services/loading.service';
 import { ToastService } from '../../providers/services/toast.service';
 import { ModalService } from '../../providers/services/modal.service';
 import { NavigationService } from '../../providers/services/navigation.service';
@@ -44,18 +45,17 @@ export class BuilderPage {
 
   /**
    * Builder page constructor.
-   * @param loadingController Controller to generate a loading dialog.
    * @param roomStore Store for handling rooms.
    * @param navigationService Navigation service to navigate through the app.
    * @param alertService Service to generate a dialog that presents users with information.
-   * @param toastService Controller to generate & present light notifications.
+   * @param loadingService Service used to generate a loading dialog
+   * @param toastService Service used to show toasts.
    * @param modalService Service to generate & present a modal.
    */
-  constructor(private loadingController: LoadingController, private navigationService: NavigationService, private roomStore: RoomStore, private alertService: AlertService, private toastService: ToastService, private modalService: ModalService) {
-    const loading = this.loadingController.create({
+  constructor(private navigationService: NavigationService, private roomStore: RoomStore, private alertService: AlertService, private loadingService: LoadingService, private toastService: ToastService, private modalService: ModalService) {
+    this.loadingService.show({
       content: 'Loading rooms...'
     });
-    loading.present();
     this.listedRooms = [];
     this.roomStore.roomsChange().subscribe(
       (storeRooms: RoomModel[]) => {
@@ -64,7 +64,7 @@ export class BuilderPage {
         this.initializeList();
       }
     );
-    this.roomStore.roomsChange().filter(array => !!array.length).first().subscribe(() => loading.dismiss());
+    this.roomStore.roomsChange().filter(array => !!array.length).first().subscribe(() => this.loadingService.dismiss());
   }
 
   private initializeList(): void {

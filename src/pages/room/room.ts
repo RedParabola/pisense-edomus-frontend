@@ -1,11 +1,12 @@
 //Basic
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, Navbar, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, Navbar, NavParams } from 'ionic-angular';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 // Services
 import { RoomStore } from '../../providers/stores/room.store';
 import { ThingStore } from '../../providers/stores/thing.store';
+import { LoadingService } from '../../providers/services/loading.service';
 
 // Models
 import { RoomModel } from '../../core/model/room.model';
@@ -43,12 +44,12 @@ export class RoomPage {
    * @param sanitizer Controller to bypass the url for background images.
    * @param roomStore Store for handling rooms.
    * @param thingStore Store for handling things.
+   * @param loadingService Service used to generate a loading dialog
    */
-  constructor(private loadingController: LoadingController, public navParams: NavParams, private sanitizer: DomSanitizer, private roomStore: RoomStore, private thingStore: ThingStore) {
-    const loading = this.loadingController.create({
+  constructor(public navParams: NavParams, private sanitizer: DomSanitizer, private roomStore: RoomStore, private thingStore: ThingStore, private loadingService: LoadingService) {
+    this.loadingService.show({
       content: 'Loading room...'
     });
-    loading.present();
     this.roomThings = [];
     const roomId: string = this.navParams.get('roomId');
     this.room = Object.assign({}, this.roomStore.getCurrentRoomById(roomId));
@@ -56,7 +57,7 @@ export class RoomPage {
     this.thingStore.thingsChange().filter(array => !!array.length).first().subscribe(
       (storeThings: ThingModel[]) => {
         this.roomThings = storeThings.filter(thing => thing.linkedRoomId === this.room.id);
-        loading.dismiss();
+        this.loadingService.dismiss();
       }
     );
   }

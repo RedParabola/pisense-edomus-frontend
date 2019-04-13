@@ -68,14 +68,9 @@ namespace AppConfiguration {
     domainURLEndPoint: string;
 
     /**
-     * Base URL of the endpoint.
+     * Whether it uses https or just http.
      */
-    prefixURLEndPoint: string;
-
-    /**
-     * Security Base URL of the endpoint.
-     */
-    securityEndpoint: string;
+    isHttpsProtocol: boolean;
 
     /**
      * Api base endpoint.
@@ -86,6 +81,11 @@ namespace AppConfiguration {
      * Api version endpoint.
      */
     apiVersion: string;
+
+    /**
+     * Routes blacklisted for current given api endpoint.
+     */
+    jwtBlacklistedRoutes: string[];
     
   }
 }

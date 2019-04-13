@@ -8,7 +8,7 @@ import { ApiRoomProvider } from '../api/api-room.service';
 
 // Services
 import { AuthService } from '../services/auth.service';
-import { NetworkStatus } from '../services/networkStatus.service';
+import { NetworkService } from '../services/network.service';
 import { LoggerService } from '../services/logger.service'
 
 // Models
@@ -45,10 +45,10 @@ export class RoomStore {
    * @param roomDB Room database service
    * @param roomProvider Api room provider
    * @param authService Service to provide authentication
-   * @param networkStatus Network status service
+   * @param networkService Network status service
    * @param loggerService logger service
    */
-  constructor(private roomDB: RoomDatabaseService, private roomProvider: ApiRoomProvider, public auth: AuthService, private networkStatus: NetworkStatus, private loggerService: LoggerService) {
+  constructor(private roomDB: RoomDatabaseService, private roomProvider: ApiRoomProvider, public auth: AuthService, private networkService: NetworkService, private loggerService: LoggerService) {
     this._currentRoomsObservable = new BehaviorSubject<RoomModel[]>([]);
     this._currentRooms = [];
     this._networkSubscription = null;
@@ -57,7 +57,7 @@ export class RoomStore {
   public listenAuthenticationStatus(): void {
     this.auth.authenticationObserver().subscribe((status: boolean) => {
       if (status) {
-        this._networkSubscription = this.networkStatus.onlineObserver().subscribe((isOnline) => {
+        this._networkSubscription = this.networkService.onlineObserver().subscribe((isOnline) => {
           this.isOnline = isOnline;
           this.synchronizeData();
         });
