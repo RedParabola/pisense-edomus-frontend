@@ -54,7 +54,7 @@ export class ThingStore {
    * @param thingProvider Api thing provider
    * @param linkProvider Api link provider
    * @param authService Service to provide authentication
-   * @param networkService Network status service
+   * @param networkService Network service
    * @param loggerService logger service
    */
   constructor(private roomStore: RoomStore, private thingDB: ThingDatabaseService, private thingProvider: ApiThingProvider, private linkProvider: ApiLinkProvider, public auth: AuthService, private networkService: NetworkService, private loggerService: LoggerService) {

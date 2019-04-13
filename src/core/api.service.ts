@@ -50,7 +50,7 @@ export class ApiGenericProvider {
    * ApiGenericProvider constructor
    * @param serviceEndpoint service endpoint to append to url.
    * @param http HTTP service to do the calls.
-   * @param networkService Network status service
+   * @param networkService Network service
    * @param authService Service to provide authentication
    */
   constructor(protected serviceEndpoint: string, protected http: HttpClient, protected networkService: NetworkService, protected auth: AuthService) {

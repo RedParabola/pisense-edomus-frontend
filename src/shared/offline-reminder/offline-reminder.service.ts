@@ -17,7 +17,7 @@ export class OfflineReminder {
 
   /**
    * Constructor to declare all the necesary to initialize the class.
-   * @param networkService Network status provider
+   * @param networkService Network service
    */
   constructor(private networkService: NetworkService) {
     //create the div element

@@ -35,7 +35,7 @@ export class ApplicationDataStore {
   /**
    * Constructor to declare all the necesary to initialize the class.
    * @param appDataDB application data database access.
-   * @param networkService Network status service
+   * @param networkService Network service
    */
   constructor(private appDataDB: ApplicationDataDatabaseService, private networkService: NetworkService) {
   }
@@ -104,6 +104,14 @@ export class ApplicationDataStore {
       );
     });
     return promise;
+  }
+
+  public getLocalEndpoint(): string {
+    return this.localApiEndpoint;
+  }
+
+  public getRemoteEndpoint(): string {
+    return this.remoteApiEndpoint;
   }
 
   public getWhitelistedDomains(): string[] {

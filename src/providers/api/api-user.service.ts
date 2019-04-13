@@ -19,7 +19,7 @@ export class ApiUserProvider extends ApiGenericProvider {
   /**
    * ApiUserProvider constructor
    * @param http Angular's http service to make calls against a server.
-   * @param networkService Network status service
+   * @param networkService Network service
    * @param authService Service to provide authentication
    */
   constructor(http: HttpClient, networkService: NetworkService, auth: AuthService) {

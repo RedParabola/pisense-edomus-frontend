@@ -20,8 +20,23 @@ export class LoginPage implements OnInit {
   /**
    * Form for login/register credentials.
    */
-  credentialsForm: FormGroup;
- 
+  public credentialsForm: FormGroup;
+
+  /**
+   * Form for network URLs.
+   */
+  public urlForm: FormGroup;
+
+  /**
+   * localUrl input
+   */
+  public localUrl: string;
+
+  /**
+   * remoteUrl input
+   */
+  public remoteUrl: string;
+
   /**
    * Login page constructor.
    * @param formBuilder Builder for forms.
@@ -39,6 +54,8 @@ export class LoginPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+    this.localUrl = this.appDataStore.getLocalEndpoint();
+    this.remoteUrl = this.appDataStore.getRemoteEndpoint();
   }
 
   onSubmit() {
@@ -77,7 +94,7 @@ export class LoginPage implements OnInit {
     this.loadingService.show({
       content: 'Linking server...'
     });
-    this.appDataStore.storeApiEndpoints('loler.lolenz.scr:3000', 'mundoloco.casaputas:3000').then(
+    this.appDataStore.storeApiEndpoints(this.localUrl, this.remoteUrl).then(
       () => {
         this.loadingService.setContent("Link successful! App will autoclose in 10 seconds in order to use the new server settings... Please restart the App :)");
         setTimeout(() => {

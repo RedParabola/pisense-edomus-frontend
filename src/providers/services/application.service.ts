@@ -37,7 +37,7 @@ export class ApplicationService {
    * @param thingStore Store for handling things.
    * @param offlineReminder Service used to feedback that the app is offline
    * @param loggerService Logger service
-   * @param networkService Network status service
+   * @param networkService Network service
    * @param navigationService Navigation service to navigate through the app.
    */
   constructor(private platform: Platform, private userStore: UserStore, private roomStore: RoomStore, private thingStore: ThingStore, private offlineReminder: OfflineReminder, private loggerService: LoggerService, private networkService: NetworkService, private navigationService: NavigationService) {

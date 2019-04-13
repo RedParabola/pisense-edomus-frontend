@@ -45,7 +45,7 @@ export class RoomStore {
    * @param roomDB Room database service
    * @param roomProvider Api room provider
    * @param authService Service to provide authentication
-   * @param networkService Network status service
+   * @param networkService Network service
    * @param loggerService logger service
    */
   constructor(private roomDB: RoomDatabaseService, private roomProvider: ApiRoomProvider, public auth: AuthService, private networkService: NetworkService, private loggerService: LoggerService) {

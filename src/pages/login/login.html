@@ -9,17 +9,29 @@
  
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" formControlName="email"></ion-input>
+      <ion-input type="email" formControlName="email" value="123@456.com"></ion-input>
     </ion-item>
  
     <ion-item>
       <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" formControlName="password"></ion-input>
+      <ion-input type="password" formControlName="password" value="123456"></ion-input>
     </ion-item>
  
     <button ion-button expand="full" type="submit" [disabled]="!credentialsForm.valid">Login</button>
     <button ion-button expand="full" type="button" (click)="register()" [disabled]="!credentialsForm.valid">Register</button>
-    <button ion-button expand="full" type="button" (click)="linkServer()">Link server</button>
  
   </form>
+ 
+  <ion-item>
+    <ion-label position="stacked">LAN URL:Port</ion-label>
+    <ion-input type="string" [(ngModel)]="localUrl"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Data URL:Port</ion-label>
+    <ion-input type="string" [(ngModel)]="remoteUrl"></ion-input>
+  </ion-item>
+
+  <button ion-button expand="full" type="button" (click)="linkServer()">Link server</button>
+ 
 </ion-content>
