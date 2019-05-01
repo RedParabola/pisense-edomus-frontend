@@ -88,10 +88,17 @@ export class ApplicationService {
     if (isProduction) {
       this.loggerService.setProductionMode();
     }
-    this.networkService.init();
-    this.offlineReminder.init();
-    this.navigationService.init();
-    return Promise.resolve(); 
+    const promise: Promise<any> = new Promise<any>((resolve, reject) => {
+      this.networkService.init().then(
+      () => {
+        this.offlineReminder.init();
+        this.navigationService.init();
+        resolve();
+      }, () => {
+        reject();
+      });
+    });
+    return promise;
   }
 
   /**

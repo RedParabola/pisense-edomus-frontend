@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
   /**
    * Login page constructor.
    * @param formBuilder Builder for forms.
-   * @param appDataStore Used to access to stored application info such as unique device id.
+   * @param appDataStore Used to access to stored application info
    * @param userStore Store to handle user info.
    * @param applicationService Service to get the application main functionality.
    * @param loadingService Service used to generate a loading dialog

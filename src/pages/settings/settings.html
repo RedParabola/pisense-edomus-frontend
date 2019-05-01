@@ -12,5 +12,18 @@
 </ion-header>
 
 <ion-content no-bounce>
+  <ion-list>
 
+    <ion-item>
+      <ion-label floating>LAN MAC</ion-label>
+      <ion-input [disabled] [(ngModel)]="homeLanInfo.bssid" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>LAN SSID</ion-label>
+      <ion-input [disabled] [(ngModel)]="homeLanInfo.ssid" type="text"></ion-input>
+    </ion-item>
+    <button ion-button full (click)="updateHomeLanInfo()">Set current LAN as Home</button>
+
+
+  </ion-list>
 </ion-content>

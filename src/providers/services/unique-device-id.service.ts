@@ -25,7 +25,7 @@ export class UniqueDeviceIDService {
   /**
    * Constructor where we import all needed in the service.
    * @param platform Used to get information about your current device.
-   * @param appDataStore Used to access to stored application info such as unique device id.
+   * @param appDataStore Used to access to stored application info
    * @param uniqueDeviceID plugin to know the device's unique Id.
 ¡   */
   constructor(private platform: Platform, private appDataStore: ApplicationDataStore, private uniqueDeviceID: UniqueDeviceID) { }

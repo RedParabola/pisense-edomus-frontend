@@ -22,7 +22,7 @@
       </ion-list>
     </ion-slide>
     <ion-slide>
-      <h1>Select a compatible model for your new {{finalConfiguration.type | lowercase}}:</h1>
+      <h1>Select an available model for your new {{finalConfiguration.type | lowercase}}:</h1>
       <ion-list radio-group [(ngModel)]="selectedModel">
         <ion-item *ngFor="let model of models">
           <ion-label>{{model}}</ion-label>

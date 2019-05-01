@@ -23,6 +23,11 @@ const { domainURLEndPoint, isHttpsProtocol, apiBaseEndpoint, jwtBlacklistedRoute
 export class ApplicationDataStore {
 
   /**
+   * Home LAN info such as MAC Address and SSID
+   */
+  private homeLanInfo: any;
+
+  /**
    * local api endpoint
    */
   private localApiEndpoint: string;
@@ -38,6 +43,10 @@ export class ApplicationDataStore {
    * @param networkService Network service
    */
   constructor(private appDataDB: ApplicationDataDatabaseService, private networkService: NetworkService) {
+    this.appDataDB.get(APPLICATION_CONSTANTS.HOME_LAN_INFO).then(
+      (answer) => this._setHomeLanInfo(answer),
+      (error) => this._setHomeLanInfo({}),
+    )
   }
 
   /**
@@ -129,6 +138,36 @@ export class ApplicationDataStore {
       domains.push(this.remoteApiEndpoint + '/' + apiBaseEndpoint + element);
     });
     return domains;
+  }
+
+  public getHomeLanInfo(): any {
+    return this.homeLanInfo;
+  }
+
+  public updateHomeLanInfo(): Promise<any> {
+    const promise: Promise<any> = new Promise<any>((resolve, reject) => {
+      let currentLanInfo = this.networkService.getCurrentLanInfo();
+      if (this.networkService.isLAN() && currentLanInfo.ssid && currentLanInfo.bssid) {
+        this.appDataDB.set(APPLICATION_CONSTANTS.HOME_LAN_INFO, currentLanInfo).then(
+          (answer: any) => {
+            this._setHomeLanInfo(answer);
+            console.log('Updated Home LAN info successfully.');
+            resolve(this.homeLanInfo);
+          }, (error) => {
+            console.log('Something went wrong when trying to update Home LAN info.');
+            reject();
+          }
+        );
+      } else {
+        reject('You need to be connected to a valid LAN.');
+      }
+    });
+    return promise;
+  }
+
+  private _setHomeLanInfo(lanInfo: any): void {
+    this.homeLanInfo = lanInfo;
+    this.networkService.setHomeLanInfo(this.homeLanInfo);
   }
 
   private _setNetworkUrls(local: string, remote: string): void {

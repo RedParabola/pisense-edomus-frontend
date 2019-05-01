@@ -58,10 +58,9 @@ export class ApiGenericProvider {
     this.headers[API_CONSTANTS.CONTENT_TYPE] = API_CONSTANTS.JSON;
     this.networkService.onlineObserver().subscribe((isOnline) => {
       if (isOnline) {
-        if (this.networkService.isDataNetwork()) {
-          this.url = `${this.networkService.getRemoteNetworkUrl()}${apiBaseEndpoint}${serviceEndpoint}`;
-        } else if (this.networkService.isLAN()) {
-          this.url =`${this.networkService.getLocalNetworkUrl()}${apiBaseEndpoint}${serviceEndpoint}`;
+        let activeNetworkUrl: string = this.networkService.getActiveNetworkUrl();
+        if (activeNetworkUrl) {
+          this.url = `${activeNetworkUrl}${apiBaseEndpoint}${serviceEndpoint}`;
         } else {
           this.url =`http://${domainURLEndPoint}/${apiBaseEndpoint}${serviceEndpoint}`;
         }

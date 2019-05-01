@@ -3,6 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, Navbar } from 'ionic-angular';
 
 //Services
+import { ApplicationDataStore } from '../../providers/stores/application-data.store';
 
 /**
  * Settings page.
@@ -17,9 +18,24 @@ export class SettingsPage {
   @ViewChild(Navbar) navBar: Navbar;
 
   /**
-   * Settings page constructor.
+   * Home LAN parameters.
    */
-  constructor() {
+  public homeLanInfo: any;
+
+  /**
+   * Settings page constructor.
+   * @param appDataStore Used to access to stored application info
+   */
+  constructor(private appDataStore: ApplicationDataStore) {
+    this.homeLanInfo = this.appDataStore.getHomeLanInfo();
   }
 
+  public updateHomeLanInfo(): void {
+    this.appDataStore.updateHomeLanInfo().then(
+      (answer) => {
+        this.homeLanInfo = answer;
+      }, () => {
+
+    });
+  }
 }

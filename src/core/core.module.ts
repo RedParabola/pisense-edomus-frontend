@@ -13,7 +13,7 @@ import { AuthService } from '../providers/services/auth.service';
 /**
  * Initialize the api to be exported and used.
  * @param http Angular http provider.
- * @param appDataStore Used to access to stored application info such as unique device id.
+ * @param appDataStore Used to access to stored application info
  * @param networkService Network service
  * @param authService Service to provide authentication
  * @param baseUrl Base url of the end-point.

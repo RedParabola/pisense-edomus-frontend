@@ -19,6 +19,7 @@ import { Network } from '@ionic-native/network';
 import { Globalization } from '@ionic-native/globalization';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { Diagnostic } from '@ionic-native/diagnostic';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
 
 //ionic configuration
 import { ionicConfig, mediaConfig, ResponsiveDefinition } from '../config/config.module';
@@ -162,6 +163,7 @@ export function jwtOptionsFactory(applicationDataStore, userDB) {
     Diagnostic,
     Globalization,
     InAppBrowser,
+    AndroidPermissions,
     TitleCasePipe,
 
     //Singleton providers
