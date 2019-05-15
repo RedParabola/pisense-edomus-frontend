@@ -36,11 +36,6 @@ export class RoomStore {
   private _networkSubscription: Subscription;
 
   /**
-   * Wether the app is currently connected or not.
-   */
-  private isOnline: boolean;
-
-  /**
    * Constructor to declare all the necesary to initialize the class.
    * @param roomDB Room database service
    * @param roomProvider Api room provider
@@ -58,8 +53,7 @@ export class RoomStore {
     this.auth.authenticationObserver().subscribe((status: boolean) => {
       if (status) {
         this._networkSubscription = this.networkService.onlineObserver().subscribe((isOnline) => {
-          this.isOnline = isOnline;
-          this.synchronizeData();
+          if (isOnline) this.synchronizeData();
         });
       } else if (this._networkSubscription) {
         this._networkSubscription.unsubscribe();
@@ -71,18 +65,16 @@ export class RoomStore {
    * when online, synchronize data with the remote changes in rooms
    */
   private synchronizeData(): void {
-    if (this.isOnline) {
-      const promiseArray: Promise<any>[] = [];
-      // Get all rooms from remote service
-      this.roomProvider.getAllRooms().then((rooms: RoomModel[]) => {
-        // Save each room into the DB
-        rooms.forEach(room => promiseArray.push(this.roomDB.set(room.id, room)));
-        Promise.all(promiseArray).then(
-          () => this.refreshList(),
-          (error) => this.loggerService.error(this, `FAILED Set Room into DB.`, error)
-        );
-      }, (error) => this.loggerService.error(this, `FAILED Get All Rooms from API.`, error));
-    }
+    const promiseArray: Promise<any>[] = [];
+    // Get all rooms from remote service
+    this.roomProvider.getAllRooms().then((rooms: RoomModel[]) => {
+      // Save each room into the DB
+      rooms.forEach(room => promiseArray.push(this.roomDB.set(room.id, room)));
+      Promise.all(promiseArray).then(
+        () => this.refreshList(),
+        (error) => this.loggerService.error(this, `FAILED Set Room into DB.`, error)
+      );
+    }, (error) => this.loggerService.error(this, `FAILED Get All Rooms from API.`, error));
   }
 
   /**

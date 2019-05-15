@@ -21,7 +21,7 @@ export class ModalService {
    * @param options Modal options.
    * @returns Modal item to be able to manipulate it.
    */
-  showModal(component: any, data: any, options: ModalOptions): Modal {
+  public showModal(component: any, data: any, options: ModalOptions): Modal {
     options.enableBackdropDismiss = false;
     let modal = this.modalController.create(component, data, options);
     modal.present();

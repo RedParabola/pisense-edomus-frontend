@@ -39,7 +39,7 @@ export class OfflineReminder {
   /**
    * Method to initialize the offline reminder service
    */
-  public init() {
+  public init(): void {
     this.networkService.onlineObserver().subscribe((isOnline) => {
       isOnline ? this._isOnline() : this._isOffline();
     });
@@ -48,14 +48,14 @@ export class OfflineReminder {
   /**
    * Method to remove the class if the app is online
    */
-  private _isOnline() {
+  private _isOnline(): void {
     document.body.getElementsByClassName('offline-reminder').length ? document.body.removeChild(this.element) : null;
   }
 
   /**
    * Method to add the class if the app is offline
    */
-  private _isOffline() {
+  private _isOffline(): void {
     document.body.appendChild(this.element);
   }
 }

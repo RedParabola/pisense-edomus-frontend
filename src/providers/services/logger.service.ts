@@ -21,7 +21,7 @@ export class LoggerService {
    * @param context The actual context of the message
    * @param message the message itself
    */
-  public error(context: any, ...data: any[]) {
+  public error(context: any, ...data: any[]): void {
     this.logger = Log.create(context.constructor.name);
     this.logger.color = 'red';
     data.forEach((element) => {
@@ -34,7 +34,7 @@ export class LoggerService {
   * @param context The actual context of the message
   * @param message the message itself
   */
-  public warn(context: any, ...data: any[]) {
+  public warn(context: any, ...data: any[]): void {
     this.logger = Log.create(context.constructor.name);
     this.logger.color = 'yellow';
     data.forEach((element) => {
@@ -47,7 +47,7 @@ export class LoggerService {
   * @param context The actual context of the message
   * @param message the message itself
   */
-  public log(context: any, ...data: any[]) {
+  public log(context: any, ...data: any[]): void {
     this.logger = Log.create(context.constructor.name);
     this.logger.color = 'blue';
     data.forEach((element) => {
@@ -60,7 +60,7 @@ export class LoggerService {
   * @param context The actual context of the message
   * @param message the message itself
   */
-  public info(context: any, ...data: any[]) {
+  public info(context: any, ...data: any[]): void {
     this.logger = Log.create(context.constructor.name);;
     this.logger.color = 'green';
     data.forEach((element) => {
@@ -71,7 +71,7 @@ export class LoggerService {
   /**
    * Enable production mode
    */
-  public setProductionMode() {
+  public setProductionMode(): void {
     Log.setProductionMode();
   }
 

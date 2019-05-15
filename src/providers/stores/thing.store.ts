@@ -28,7 +28,7 @@ import { COMMAND_CONSTANTS } from '../../core/constants/command.constants';
 export class ThingStore {
 
   /**
-   * Observer to know if the thing list change.
+   * Observer to know if the thing list changes.
    */
   private _currentThingsObservable: BehaviorSubject<ThingModel[]>
 
@@ -41,11 +41,6 @@ export class ThingStore {
    * Subscription to network status.
    */
   private _networkSubscription: Subscription;
-
-  /**
-   * Wether the app is currently connected or not.
-   */
-  private isOnline: boolean;
 
   /**
    * Constructor to declare all the necesary to initialize the class.
@@ -74,8 +69,7 @@ export class ThingStore {
     this.auth.authenticationObserver().subscribe((status: boolean) => {
       if (status) {
         this._networkSubscription = this.networkService.onlineObserver().subscribe((isOnline) => {
-          this.isOnline = isOnline;
-          this.synchronizeData();
+          if (isOnline) this.synchronizeData();
         });
       } else if (this._networkSubscription) {
         this._networkSubscription.unsubscribe();
@@ -87,17 +81,15 @@ export class ThingStore {
    * when online, synchronize data with the remote changes in things
    */
   private synchronizeData(): void {
-    if (this.isOnline) {
-      const promiseArray: Promise<any>[] = [];
-      // Get all things from remote service
-      this.thingProvider.getAllThings().then((things: ThingModel[]) => {
-        // Save each thing into the DB
-        things.forEach(thing => promiseArray.push(this.thingDB.set(thing.id, thing)));
-        Promise.all(promiseArray).then(
-          () => this.refreshList(),
-          (error) => this.loggerService.error(this, `FAILED Set Thing into DB.`, error));
-      }, (error) => this.loggerService.error(this, `FAILED Get All Things from API.`, error));
-    }
+    const promiseArray: Promise<any>[] = [];
+    // Get all things from remote service
+    this.thingProvider.getAllThings().then((things: ThingModel[]) => {
+      // Save each thing into the DB
+      things.forEach(thing => promiseArray.push(this.thingDB.set(thing.id, thing)));
+      Promise.all(promiseArray).then(
+        () => this.refreshList(),
+        (error) => this.loggerService.error(this, `FAILED Set Thing into DB.`, error));
+    }, (error) => this.loggerService.error(this, `FAILED Get All Things from API.`, error));
   }
 
   /**
@@ -119,7 +111,7 @@ export class ThingStore {
   }
 
   /**
-   * Method to know if the thing list changes.
+   * Method to know if the thing list changes and retrieve it.
    */
   public thingsChange(): Observable<ThingModel[]> {
     return this._currentThingsObservable.asObservable().share();
