@@ -5,7 +5,7 @@ import { StorageConfig } from '@ionic/storage';
 import { DB_NAME } from '../core/constants/storage.constants';
 
 /**
- * Configuraton for the storage service
+ * Configuration for the storage service
  */
 export const thingConfig = {
   databaseConfig: <StorageConfig>{

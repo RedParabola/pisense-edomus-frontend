@@ -1,15 +1,18 @@
 // Basic
 import { Component, ViewChild } from '@angular/core';
 import { ViewController, Slides, NavParams } from 'ionic-angular';
+import { Subscription } from 'rxjs';
 
 // Services
 import { RoomStore } from '../../../providers/stores/room.store';
 import { ThingStore } from '../../../providers/stores/thing.store';
+import { BoardStore } from '../../../providers/stores/board.store';
 import { LoadingService } from '../../../providers/services/loading.service';
 import { ToastService } from '../../../providers/services/toast.service';
 
 // Models
 import { RoomModel } from '../../../core/model/room.model';
+import { BoardModel } from '../../../core/model/board.model';
 import { ThingModel } from '../../../core/model/thing.model';
 
 /**
@@ -36,7 +39,7 @@ export class WizardLinkModal {
   public linkingThing: ThingModel;
 
   /**
-   * Selected type for the thing.
+   * Selected room to which thing will be linked.
    */
   public selectedRoom: RoomModel;
 
@@ -46,19 +49,26 @@ export class WizardLinkModal {
   public finalConfiguration: any;
 
   /**
+   * Subscription to board detection.
+   */
+  private _boardDetection: Subscription;
+
+  /**
    * Constructor to declare all the necesary to initialize the class.
    * @param viewCtrl Controller to handle the current shown modal.
    * @param navParams navigation parameters.
    * @param roomStore Store for handling rooms.
+   * @param boardStore Store for handling boards.
    * @param thingStore Store for handling things.
    * @param loadingService Service used to generate a loading dialog
    * @param toastService Service used to show toasts.
    */
-  constructor(public viewCtrl: ViewController, public navParams: NavParams, private roomStore: RoomStore, private thingStore: ThingStore, private loadingService: LoadingService, private toastService: ToastService) {
+  constructor(public viewCtrl: ViewController, public navParams: NavParams, private roomStore: RoomStore, private boardStore: BoardStore, private thingStore: ThingStore, private loadingService: LoadingService, private toastService: ToastService) {
     this.currentSlide = 0;
     this.linkingThing = this.navParams.get('linkingThing');
     this.roomList = [];
     this.finalConfiguration = {};
+    this._boardDetection = null;
     this.roomStore.roomsChange().subscribe(
       (storeRooms: RoomModel[]) => this.roomList = Object.assign([], storeRooms));
   }
@@ -74,8 +84,18 @@ export class WizardLinkModal {
       if (this.selectedRoom !== this.finalConfiguration.room) {
         this.finalConfiguration.room = this.selectedRoom;
       }
-    }
+    } else if (this.slides.getPreviousIndex() === 2) {
+      if (this.finalConfiguration.detectedBoard) {
+        this.finalConfiguration.detectedBoard = null;
+      }
+      this.stopPollingUsbBoard();
+    } 
     // ...towards active slide
+    if (this.slides.getActiveIndex() === 2) {
+      this.boardStore.startPollingUsbBoard();
+      this._boardDetection = this.boardStore.detectedBoardObserver().subscribe(
+        (board: BoardModel) => this.finalConfiguration.detectedBoard = board);
+    }
   }
 
   public slideChanged() {
@@ -83,7 +103,7 @@ export class WizardLinkModal {
   }
 
   public next() {
-    if (this.currentSlide === 1) {
+    if (this.currentSlide === 2) {
       this.closeAndFinish();
     } else {
       this.slides.slideNext(250);
@@ -105,7 +125,12 @@ export class WizardLinkModal {
         if (this.selectedRoom) { canSlide = true; }
         break;
       case 1:
-        canSlide = true;
+        if (this.finalConfiguration.assignedPin) { canSlide = true; }
+        break;
+      case 2:
+        if (this.finalConfiguration.detectedBoard && this.finalConfiguration.detectedBoard.serialNumber) {
+          canSlide = true;
+        }
         break;
       default:
         break;
@@ -114,17 +139,31 @@ export class WizardLinkModal {
     return canSlide;
   }
 
+  private stopPollingUsbBoard() {
+    if (this._boardDetection) {
+      this._boardDetection.unsubscribe();
+      this.boardStore.stopPollingUsbBoard();
+    }
+  }
+
   private closeAndDiscard() {
+    this.stopPollingUsbBoard();
     this.viewCtrl.dismiss();
   }
 
   private closeAndFinish() {
+    this.stopPollingUsbBoard();
     this.loadingService.show({
-      content: 'Linking...'
+      content: 'Linking... Be patient. Compilation and flash could take a couple minutes.'
     });
-    this.thingStore.linkRoom(this.linkingThing, this.finalConfiguration.room.id).then(
+    this.thingStore.linkRoom(
+      this.linkingThing,
+      this.finalConfiguration.room.id,
+      this.finalConfiguration.detectedBoard.serialNumber,
+      this.finalConfiguration.assignedPin).then(
       () => {
-        this.toastService.showToast({ message: `'${this.linkingThing.customName}' successfully linked to '${this.finalConfiguration.room.customName}'.` });
+        this.toastService.showToast({ message:
+          `'${this.linkingThing.customName}' successfully linked to '${this.finalConfiguration.room.customName}' on board '${this.finalConfiguration.detectedBoard.id}' through pin '${this.finalConfiguration.assignedPin}'.` });
         this.loadingService.dismiss();
       },
       error => {

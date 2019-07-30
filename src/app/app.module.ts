@@ -41,6 +41,7 @@ import { WizardLinkModal } from '../components/modals/wizard-link/wizard-link.mo
 //Providers: Import the providers into the appModule in order to have a singleton of the application.
 import { ApiUserProvider } from '../providers/api/api-user.service';
 import { ApiRoomProvider } from '../providers/api/api-room.service';
+import { ApiBoardProvider } from '../providers/api/api-board.service';
 import { ApiThingProvider } from '../providers/api/api-thing.service';
 import { ApiLinkProvider } from '../providers/api/api-link.service';
 
@@ -64,12 +65,14 @@ import { LoggerService } from '../providers/services/logger.service';
 import { UserDatabaseService } from '../providers/db/user.service.db'
 import { ApplicationDataDatabaseService } from '../providers/db/application-data.service.db';
 import { RoomDatabaseService } from '../providers/db/room.service.db'
+import { BoardDatabaseService } from '../providers/db/board.service.db'
 import { ThingDatabaseService } from '../providers/db/thing.service.db'
 
 //Stores: Import the stores into the appModule in order to have a singleton of the application.
 import { ApplicationDataStore } from '../providers/stores/application-data.store';
 import { UserStore } from '../providers/stores/user.store';
 import { RoomStore } from '../providers/stores/room.store';
+import { BoardStore } from '../providers/stores/board.store';
 import { ThingStore } from '../providers/stores/thing.store';
 
 //Directives
@@ -169,6 +172,7 @@ export function jwtOptionsFactory(applicationDataStore, userDB) {
     //Singleton providers
     ApiUserProvider,
     ApiRoomProvider,
+    ApiBoardProvider,
     ApiThingProvider,
     ApiLinkProvider,
 
@@ -195,12 +199,14 @@ export function jwtOptionsFactory(applicationDataStore, userDB) {
     UserDatabaseService,
     ApplicationDataDatabaseService,
     RoomDatabaseService,
+    BoardDatabaseService,
     ThingDatabaseService,
 
     //Stores
     UserStore,
     ApplicationDataStore,
     RoomStore,
+    BoardStore,
     ThingStore
   ]
 })

@@ -20,6 +20,7 @@ import { CommandAnswerModel } from '../../core/model/command-answer.model';
 
 // Constants
 import { COMMAND_CONSTANTS } from '../../core/constants/command.constants';
+import { BoardModel } from 'core/model/board.model';
 
 /**
  * Store to handle things.
@@ -198,9 +199,9 @@ export class ThingStore {
     return this.thingDB.removeAll();
   }
 
-  public linkRoom(thing: ThingModel, roomId: string): Promise<any> {
+  public linkRoom(thing: ThingModel, roomId: string, boardSN: string, boardPin: string): Promise<any> {
     const promise: Promise<any> = new Promise((resolve, reject) => {
-      this.linkProvider.linkRoom(thing.id, roomId)
+      this.linkProvider.linkRoom(thing.id, roomId, boardSN, boardPin)
         .then(() => {
           thing.linkedRoomId = roomId;
           return this.thingDB.set(thing.id, thing);

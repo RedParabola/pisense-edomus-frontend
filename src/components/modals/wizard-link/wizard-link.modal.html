@@ -5,15 +5,16 @@
     </ion-buttons>
     <ion-title >Link thing to a room</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="next()" [disabled]="!canSlideNext()">{{currentSlide === 1? 'Finish': 'Next'}}</button>
+      <button ion-button (click)="next()" [disabled]="!canSlideNext()">{{currentSlide === 2? 'Finish': 'Next'}}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-slides (ionSlideWillChange)="slideWillChange()" (ionSlideDidChange)="slideChanged()" pager>
+  <ion-slides style='overflow:scroll' (ionSlideWillChange)="slideWillChange()" (ionSlideDidChange)="slideChanged()" pager>
+
     <ion-slide>
-      <h1>Select the room you want to link '{{linkingThing.customName}}'' with:</h1>
+      <h1>Select the room you want to link '{{linkingThing.customName}}' with:</h1>
       <ion-list radio-group [(ngModel)]="selectedRoom">
         <ion-item *ngFor="let room of roomList">
           <ion-label>{{room.customName}}</ion-label>
@@ -21,8 +22,24 @@
         </ion-item>
       </ion-list>
     </ion-slide>
+
     <ion-slide>
-      <h1>'{{linkingThing.customName}}' will be linked to room '{{selectedRoom?.customName}}'.</h1>
+      <h2>Locate the physical board where you connected '{{linkingThing.customName}}' and enter the connection pin:</h2>
+      <ion-item>
+        <ion-label position="floating">Pin</ion-label>
+        <ion-input placeholder="17" [(ngModel)]="finalConfiguration.assignedPin"></ion-input>
+      </ion-item>
+      <h3> BE CAREFUL! With this configuration, you will override connections with any thing previously connected to these pins. </h3>
     </ion-slide>
+
+    <ion-slide>
+      <h3>'{{linkingThing.customName}}' will be linked to room '{{selectedRoom?.customName}}'.</h3>
+      <br>
+      <h4>Now, please connect the board to your Raspberry Pi through its USB port.</h4>
+      <h4>Make sure '{{linkingThing.customName}}' is connected through pin {{finalConfiguration.assignedPin}} to the board.</h4>
+      <br>
+      <h5>{{ (finalConfiguration.detectedBoard && finalConfiguration.detectedBoard.serialNumber) ? 'Ready! Tap Finish to link.' : 'Waiting for a connection on USB...' }}</h5>
+    </ion-slide>
+
   </ion-slides>
 </ion-content>

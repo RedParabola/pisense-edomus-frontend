@@ -27,10 +27,12 @@ export class ApiLinkProvider extends ApiGenericProvider {
    * Function that links a thing to a room.
    * @param thingId Thing id.
    * @param roomId Room id.
+   * @param boardSN Serial Number of the board in which we connect the thing.
+   * @param boardPin The given board pin in which we connect the thing.
    */
-  public linkRoom(thingId: string, roomId: string): Promise<any> {
+  public linkRoom(thingId: string, roomId: string, boardSN: string, boardPin: string): Promise<any> {
     let promise = new Promise<any>((resolve, reject) => {
-      this.create('', { thingId, roomId }).then(
+      this.create('', { thingId, roomId, boardSN, boardPin }).then(
         response => {
           resolve(response);
         }, (error) => {
