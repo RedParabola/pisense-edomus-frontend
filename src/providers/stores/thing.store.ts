@@ -199,9 +199,9 @@ export class ThingStore {
     return this.thingDB.removeAll();
   }
 
-  public linkRoom(thing: ThingModel, roomId: string, boardSN: string, boardPin: string): Promise<any> {
+  public linkRoom(thing: ThingModel, roomId: string, boardModelId: string, boardPin: string): Promise<any> {
     const promise: Promise<any> = new Promise((resolve, reject) => {
-      this.linkProvider.linkRoom(thing.id, roomId, boardSN, boardPin)
+      this.linkProvider.linkRoom(thing.id, thing.model, roomId, boardModelId, boardPin)
         .then(() => {
           thing.linkedRoomId = roomId;
           return this.thingDB.set(thing.id, thing);

@@ -15,6 +15,9 @@ import { RoomModel } from '../../../core/model/room.model';
 import { BoardModel } from '../../../core/model/board.model';
 import { ThingModel } from '../../../core/model/thing.model';
 
+// Constants
+import { AVAILABLE_BOARDS_LIST } from '../../../core/constants/board.constants';
+
 /**
  * Component for the wizard link modal in the builder menu.
  */
@@ -34,6 +37,11 @@ export class WizardLinkModal {
   public roomList: RoomModel[];
 
   /**
+   * List of available board models.
+   */
+  public availableBoardModels: any[];
+
+  /**
    * Thing that will be linked.
    */
   public linkingThing: ThingModel;
@@ -42,6 +50,11 @@ export class WizardLinkModal {
    * Selected room to which thing will be linked.
    */
   public selectedRoom: RoomModel;
+
+  /**
+   * Selected board model.
+   */
+  public selectedBoardModelId: RoomModel;
 
   /**
    * Sum up of the configuration.
@@ -67,6 +80,7 @@ export class WizardLinkModal {
     this.currentSlide = 0;
     this.linkingThing = this.navParams.get('linkingThing');
     this.roomList = [];
+    this.availableBoardModels = AVAILABLE_BOARDS_LIST;
     this.finalConfiguration = {};
     this._boardDetection = null;
     this.roomStore.roomsChange().subscribe(
@@ -84,14 +98,18 @@ export class WizardLinkModal {
       if (this.selectedRoom !== this.finalConfiguration.room) {
         this.finalConfiguration.room = this.selectedRoom;
       }
-    } else if (this.slides.getPreviousIndex() === 2) {
+    } else if (this.slides.getPreviousIndex() === 1) {
+      if (this.selectedBoardModelId !== this.finalConfiguration.boardModelId) {
+        this.finalConfiguration.boardModelId = this.selectedBoardModelId;
+      }
+    } else if (this.slides.getPreviousIndex() === 3) {
       if (this.finalConfiguration.detectedBoard) {
         this.finalConfiguration.detectedBoard = null;
       }
       this.stopPollingUsbBoard();
     } 
     // ...towards active slide
-    if (this.slides.getActiveIndex() === 2) {
+    if (this.slides.getActiveIndex() === 3) {
       this.boardStore.startPollingUsbBoard();
       this._boardDetection = this.boardStore.detectedBoardObserver().subscribe(
         (board: BoardModel) => this.finalConfiguration.detectedBoard = board);
@@ -103,7 +121,7 @@ export class WizardLinkModal {
   }
 
   public next() {
-    if (this.currentSlide === 2) {
+    if (this.currentSlide === 3) {
       this.closeAndFinish();
     } else {
       this.slides.slideNext(250);
@@ -125,9 +143,12 @@ export class WizardLinkModal {
         if (this.selectedRoom) { canSlide = true; }
         break;
       case 1:
-        if (this.finalConfiguration.assignedPin) { canSlide = true; }
+        if (this.selectedBoardModelId) { canSlide = true; }
         break;
       case 2:
+        if (this.finalConfiguration.assignedPin) { canSlide = true; }
+        break;
+      case 3:
         if (this.finalConfiguration.detectedBoard && this.finalConfiguration.detectedBoard.serialNumber) {
           canSlide = true;
         }
@@ -154,16 +175,16 @@ export class WizardLinkModal {
   private closeAndFinish() {
     this.stopPollingUsbBoard();
     this.loadingService.show({
-      content: 'Linking... Be patient. Compilation and flash could take a couple minutes.'
+      content: 'Linking... Be patient. Compilation and upload could take a couple minutes.'
     });
     this.thingStore.linkRoom(
       this.linkingThing,
       this.finalConfiguration.room.id,
-      this.finalConfiguration.detectedBoard.serialNumber,
+      this.finalConfiguration.boardModelId,
       this.finalConfiguration.assignedPin).then(
       () => {
         this.toastService.showToast({ message:
-          `'${this.linkingThing.customName}' successfully linked to '${this.finalConfiguration.room.customName}' on board '${this.finalConfiguration.detectedBoard.id}' through pin '${this.finalConfiguration.assignedPin}'.` });
+          `'${this.linkingThing.customName}' successfully linked to '${this.finalConfiguration.room.customName}' on a '${this.finalConfiguration.boardModelId}' board, through pin '${this.finalConfiguration.assignedPin}'.` });
         this.loadingService.dismiss();
       },
       error => {

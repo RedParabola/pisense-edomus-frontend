@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title >Link thing to a room</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="next()" [disabled]="!canSlideNext()">{{currentSlide === 2? 'Finish': 'Next'}}</button>
+      <button ion-button (click)="next()" [disabled]="!canSlideNext()">{{currentSlide === 3? 'Finish': 'Next'}}</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -14,7 +14,7 @@
   <ion-slides style='overflow:scroll' (ionSlideWillChange)="slideWillChange()" (ionSlideDidChange)="slideChanged()" pager>
 
     <ion-slide>
-      <h1>Select the room you want to link '{{linkingThing.customName}}' with:</h1>
+      <h3>Select the room you want to link '{{linkingThing.customName}}' with:</h3>
       <ion-list radio-group [(ngModel)]="selectedRoom">
         <ion-item *ngFor="let room of roomList">
           <ion-label>{{room.customName}}</ion-label>
@@ -24,18 +24,28 @@
     </ion-slide>
 
     <ion-slide>
-      <h2>Locate the physical board where you connected '{{linkingThing.customName}}' and enter the connection pin:</h2>
+      <h3>Select the model of the physical board where you connected '{{linkingThing.customName}}':</h3>
+      <ion-list radio-group [(ngModel)]="selectedBoardModelId">
+        <ion-item *ngFor="let boardModel of availableBoardModels">
+          <ion-label>{{boardModel.model}}</ion-label>
+          <ion-radio [value]="boardModel.id"></ion-radio>
+        </ion-item>
+      </ion-list>
+    </ion-slide>
+
+    <ion-slide>
+      <h3>Enter the connection pin:</h3>
       <ion-item>
         <ion-label position="floating">Pin</ion-label>
         <ion-input placeholder="17" [(ngModel)]="finalConfiguration.assignedPin"></ion-input>
       </ion-item>
-      <h3> BE CAREFUL! With this configuration, you will override connections with any thing previously connected to these pins. </h3>
+      <h3>BE CAREFUL! With this configuration, you will override connections with any thing previously connected to these pins.</h3>
     </ion-slide>
 
     <ion-slide>
       <h3>'{{linkingThing.customName}}' will be linked to room '{{selectedRoom?.customName}}'.</h3>
       <br>
-      <h4>Now, please connect the board to your Raspberry Pi through its USB port.</h4>
+      <h4>Now, please connect the board to your Raspberry Pi through its main USB port.</h4>
       <h4>Make sure '{{linkingThing.customName}}' is connected through pin {{finalConfiguration.assignedPin}} to the board.</h4>
       <br>
       <h5>{{ (finalConfiguration.detectedBoard && finalConfiguration.detectedBoard.serialNumber) ? 'Ready! Tap Finish to link.' : 'Waiting for a connection on USB...' }}</h5>

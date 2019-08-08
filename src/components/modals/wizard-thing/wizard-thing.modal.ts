@@ -136,7 +136,7 @@ export class WizardThingModal {
   private loadModels() {
     // TODO: retrieve registered models for the selected thing type.
     // Should ask the thing store which would retrieve the models in a promise.
-    this.models = ['Model-S', 'Model-C', 'Model-R'];
+    this.models = ['led', 'rgbled'];
   }
 
 }
