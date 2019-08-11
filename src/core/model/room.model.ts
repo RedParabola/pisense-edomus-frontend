@@ -27,6 +27,7 @@ export interface RoomModel {
     LIGHT?: string;
     AC?: string;
     HUMIDIFIER?: string;
+    SENSOR?: string;
   }
   /**
    * current temperature

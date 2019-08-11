@@ -11,7 +11,12 @@ import { ToastService } from '../../providers/services/toast.service';
 
 // Models
 import { RoomModel } from '../../core/model/room.model';
-import { ThingModel, AirConditionerModel, LightModel, HumidifierModel } from '../../core/model/thing.model';
+import {
+  ThingModel,
+  AirConditionerModel,
+  LightModel,
+  HumidifierModel
+} from '../../core/model/thing.model';
 
 // Constants
 import { ROOM_CONSTANTS } from '../../core/constants/room.constants';

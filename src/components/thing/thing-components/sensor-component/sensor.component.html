@@ -1,0 +1,13 @@
+<ion-card style="margin: 4px;">
+  <div class="thing-image-background"
+  [style.background-image]="thingTypeImage">
+    <div class="thing-display" class="illuminated">
+      <ion-row padding text-wrap style="height: 35px;">
+        <div class="thing-icon">
+          <ion-icon name="{{thingTypeIcon}}"></ion-icon>
+        </div>
+        <div class="thing-title">{{thing.customName}}</div>
+      </ion-row>
+    </div>
+  </div>
+</ion-card>

@@ -57,13 +57,17 @@ export class NavigationService {
    */
   private _goTo(pageRoute: string, navigationParameters?: any): void {
     if (this._isPublicRoute(pageRoute)) {
-      this.activeNav.push(pageRoute, navigationParameters);
+      if (pageRoute === 'page-login') {
+        this.activeNav.goToRoot(navigationParameters);
+      } else {
+        this.activeNav.push(pageRoute, navigationParameters);
+      }
     } else {
       if (this.auth.isAuthenticated()) {
         this.activeNav.push(pageRoute, navigationParameters);
       } else {
         this.auth.onUnauthorizedRouting();
-        this.activeNav.push('page-login');
+        this.activeNav.goToRoot(navigationParameters);
       }
     }
   }

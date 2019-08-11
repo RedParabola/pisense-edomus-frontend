@@ -13,6 +13,7 @@ const appCaches = [
       './assets/imgs/other.jpg',
       './assets/imgs/porch.jpg',
       './assets/imgs/ac.jpg',
+      './assets/imgs/sensor.jpg',
       './assets/imgs/humidifier.jpg',
       './assets/imgs/light.jpg',
       './assets/imgs/img_cer.jpg',

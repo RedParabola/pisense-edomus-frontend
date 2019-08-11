@@ -6,6 +6,7 @@ import { ThingComponentAbstract } from './thing-components/thing-component.abstr
 import { LightComponent } from './thing-components/light-component/light.component';
 import { AirConditionerComponent } from './thing-components/ac-component/ac.component';
 import { HumidifierComponent } from './thing-components/humidifier-component/humidifier.component';
+import { SensorComponent } from './thing-components/sensor-component/sensor.component';
 
 // Models
 import { ThingModel } from '../../core/model/thing.model';
@@ -45,6 +46,8 @@ export class ThingComponent implements OnInit, OnDestroy {
     this.mappings[ThingModel.LIGHT] = LightComponent;
     this.mappings[ThingModel.AC] = AirConditionerComponent;
     this.mappings[ThingModel.HUMIDIFIER] = HumidifierComponent;
+    this.mappings[ThingModel.SENSOR] = SensorComponent;
+  
   }
 
   public ngOnInit() {

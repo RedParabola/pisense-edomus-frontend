@@ -35,7 +35,7 @@ export interface ThingModel {
   /**
    * Properties depending on the thing type.
    */
-  typeProperties: LightModel | AirConditionerModel;
+  typeProperties: LightModel | AirConditionerModel | SensorModel;
 }
 
 /**
@@ -61,10 +61,11 @@ export interface ThingDraftModel {
  */
 export namespace ThingModel {
 
-  export type ThingType = 'LIGHT' | 'AC' | 'HUMIDIFIER';
+  export type ThingType = 'LIGHT' | 'AC' | 'HUMIDIFIER' | 'SENSOR';
   export const LIGHT: ThingType = 'LIGHT';
   export const AC: ThingType = 'AC';
   export const HUMIDIFIER: ThingType = 'HUMIDIFIER';
+  export const SENSOR: ThingType = 'SENSOR';
 
   export type PowerStatus = 'ON' | 'OFF' | number;
   export const ON: PowerStatus = 'ON';
@@ -165,4 +166,18 @@ export namespace HumidifierModel {
   export const ON: PowerStatus = 'ON';
   export const OFF: PowerStatus = 'OFF';
 
+}
+
+/**
+ * Model for a sensor thing
+ */
+export interface SensorModel {
+  /**
+   * Power status
+   */
+  powerStatus: AirConditionerModel.PowerStatus;
+  /**
+   * model-specific measures
+   */
+  sensorMeasures: any;
 }

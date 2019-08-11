@@ -77,7 +77,7 @@ export class BoardStore {
     this.auth.authenticationObserver().subscribe((status: boolean) => {
       if (status) {
         this._networkSubscription = this.networkService.onlineObserver().subscribe((isOnline) => {
-          if (isOnline) this.synchronizeData();
+          if (isOnline) this._synchronizeData();
         });
       } else if (this._networkSubscription) {
         this._networkSubscription.unsubscribe();
@@ -88,7 +88,7 @@ export class BoardStore {
   /**
    * when online, synchronize data with the remote changes in boards
    */
-  private synchronizeData(): void {
+  private _synchronizeData(): void {
     const promiseArray: Promise<any>[] = [];
     // Get all boards from remote service
     this.boardProvider.getAllBoards().then((boards: BoardModel[]) => {

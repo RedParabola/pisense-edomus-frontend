@@ -18,16 +18,16 @@
         </ion-toggle>
       </ion-row>
       <ion-row padding-horizontal class="temperature-info">
-        <ion-col text-left padding-left *ngIf="room.temperature">
-          {{room.temperature}}ºC
+        <ion-col text-left padding-left *ngIf="room.sensorMeasures && room.sensorMeasures.temperature">
+          {{room.sensorMeasures.temperature}}ºC
         </ion-col>
         <ion-col text-right padding-right>
           <ion-icon *ngIf="airConditioningOn" name="icon-air-conditioning-indoor"></ion-icon>
         </ion-col>
       </ion-row>
       <ion-row padding-horizontal class="humidity-info">
-        <ion-col text-left padding-left *ngIf="room.humidity">
-          {{room.humidity}}%
+        <ion-col text-left padding-left *ngIf="room.sensorMeasures && room.sensorMeasures.humidity">
+          {{room.sensorMeasures.humidity}}%
         </ion-col>
         <ion-col text-right padding-right>
           <ion-icon *ngIf="humidifierOn" name="icon-drop"></ion-icon>

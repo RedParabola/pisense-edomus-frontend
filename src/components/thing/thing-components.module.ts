@@ -11,6 +11,7 @@ import { ThingComponent } from './thing.component';
 import { LightComponent } from './thing-components/light-component/light.component';
 import { AirConditionerComponent } from './thing-components/ac-component/ac.component';
 import { HumidifierComponent } from './thing-components/humidifier-component/humidifier.component';
+import { SensorComponent } from './thing-components/sensor-component/sensor.component';
 
 /**
  * Module to import and export all the components for the machine page.
@@ -25,19 +26,22 @@ import { HumidifierComponent } from './thing-components/humidifier-component/hum
     ThingComponent,
     LightComponent,
     AirConditionerComponent,
-    HumidifierComponent
+    HumidifierComponent,
+    SensorComponent
   ],
   exports: [
     ThingComponent,
     LightComponent,
     AirConditionerComponent,
-    HumidifierComponent
+    HumidifierComponent,
+    SensorComponent
   ],
   entryComponents: [
     ThingComponent,
     LightComponent,
     AirConditionerComponent,
-    HumidifierComponent
+    HumidifierComponent,
+    SensorComponent
   ],
   providers: [
   ]
