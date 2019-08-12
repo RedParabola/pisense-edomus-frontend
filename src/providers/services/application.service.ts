@@ -6,6 +6,7 @@ import { BehaviorSubject } from "rxjs";
 //Services
 import { UserStore } from '../../providers/stores/user.store';
 import { RoomStore } from '../../providers/stores/room.store';
+import { BoardStore } from '../../providers/stores/board.store';
 import { ThingStore } from '../../providers/stores/thing.store';
 import { OfflineReminder } from '../../shared/shared.module';
 import { LoggerService } from './logger.service';
@@ -34,13 +35,14 @@ export class ApplicationService {
    * @param platform Used to get information about your current device.
    * @param userStore Store to handle user info.
    * @param roomStore Store for handling rooms.
+   * @param boardStore Store for handling boards.
    * @param thingStore Store for handling things.
    * @param offlineReminder Service used to feedback that the app is offline
    * @param loggerService Logger service
    * @param networkService Network service
    * @param navigationService Navigation service to navigate through the app.
    */
-  constructor(private platform: Platform, private userStore: UserStore, private roomStore: RoomStore, private thingStore: ThingStore, private offlineReminder: OfflineReminder, private loggerService: LoggerService, private networkService: NetworkService, private navigationService: NavigationService) {
+  constructor(private platform: Platform, private userStore: UserStore, private roomStore: RoomStore, private boardStore: BoardStore, private thingStore: ThingStore, private offlineReminder: OfflineReminder, private loggerService: LoggerService, private networkService: NetworkService, private navigationService: NavigationService) {
     this._isReady = new BehaviorSubject(false);
   }
 
@@ -108,6 +110,7 @@ export class ApplicationService {
     this.navigationService.subscribeAuthenticationStatus();
     this.userStore.listenAuthenticationStatus();
     this.roomStore.listenAuthenticationStatus();
+    this.boardStore.listenAuthenticationStatus();
     this.thingStore.listenAuthenticationStatus();
     return Promise.resolve();
   }

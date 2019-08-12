@@ -40,7 +40,7 @@ export class LoadingService {
    * @param options Loading options 
    * @param lockView flag to prevent any other loading to show up until this one is dismissed, or force show loading.
    */
-  public show(options: LoadingOptions, lockView?: boolean): void  {
+  public show(options: LoadingOptions, lockView?: boolean): void {
     if (!this.isViewLocked || lockView) {
       let usedOptions = { ...this.defaultOptions, ...options };
       this.currentLoading = this.loadingController.create(usedOptions);
@@ -53,7 +53,7 @@ export class LoadingService {
    * Dismiss the current loading.
    * @param forceUnlock flag to unlock the view for future loadings.
    */
-  public dismiss(forceUnlock?: boolean): void  {
+  public dismiss(forceUnlock?: boolean): void {
     if (!this.isViewLocked || forceUnlock) {
       if (this.currentLoading) {
         this.currentLoading.dismiss();
@@ -66,7 +66,7 @@ export class LoadingService {
   /**
    * Set content to the current loading.
    */
-  public setContent(text): void  {
+  public setContent(text): void {
     if (this.currentLoading) {
       this.currentLoading.setContent(text);
     }

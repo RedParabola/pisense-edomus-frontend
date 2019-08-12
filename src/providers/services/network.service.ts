@@ -56,8 +56,6 @@ export class NetworkService {
    */
   private remoteNetworkUrl: string;
 
-  public msgs: any;
-
   /**
    * Constructor where we import all needed in the service.
    * @param network plugin to know if the device is connected

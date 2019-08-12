@@ -70,7 +70,7 @@ export class StorageService {
    * @param storage storage instance
    * @param key Primary key to delete the value
    */
-  public remove(storage: Storage, key: string) {
+  public remove(storage: Storage, key: string): Promise<any> {
     return storage.remove(key);
   }
 

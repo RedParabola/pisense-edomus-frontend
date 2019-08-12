@@ -1,0 +1,26 @@
+sensor {
+  .thing-image-background {
+    background-repeat: no-repeat;
+    background-origin: center;
+    background-size: cover;
+    background-position: center;
+    div {
+      height: 80px;
+      color: $dark_blue;
+      font-weight: bold;
+    }
+    .thing-display {
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.7) 150%),
+                  linear-gradient(-3deg, transparent 50%, $white 85%),
+                  linear-gradient(172deg, transparent 60%, $black 120%);
+      .thing-icon {
+      }
+      .thing-title {
+        font-size: 1.2em;
+        padding-left: 6px;
+      }
+    }
+    .illuminated {
+    }
+  }
+}

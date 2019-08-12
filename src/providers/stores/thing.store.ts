@@ -14,7 +14,14 @@ import { NetworkService } from '../services/network.service';
 import { LoggerService } from '../services/logger.service'
 
 // Models
-import { ThingModel, ThingDraftModel, LightModel, AirConditionerModel, HumidifierModel } from '../../core/model/thing.model';
+import {
+  ThingModel,
+  ThingDraftModel,
+  LightModel,
+  AirConditionerModel,
+  HumidifierModel,
+  SensorModel
+} from '../../core/model/thing.model';
 import { CommandRequestModel } from '../../core/model/command-request.model';
 import { CommandAnswerModel } from '../../core/model/command-answer.model';
 
@@ -28,7 +35,7 @@ import { COMMAND_CONSTANTS } from '../../core/constants/command.constants';
 export class ThingStore {
 
   /**
-   * Observer to know if the thing list change.
+   * Observer to know if the thing list changes.
    */
   private _currentThingsObservable: BehaviorSubject<ThingModel[]>
 
@@ -43,9 +50,9 @@ export class ThingStore {
   private _networkSubscription: Subscription;
 
   /**
-   * Wether the app is currently connected or not.
+   * 
    */
-  private isOnline: boolean;
+  private _pollingDataInterval: any;
 
   /**
    * Constructor to declare all the necesary to initialize the class.
@@ -74,30 +81,49 @@ export class ThingStore {
     this.auth.authenticationObserver().subscribe((status: boolean) => {
       if (status) {
         this._networkSubscription = this.networkService.onlineObserver().subscribe((isOnline) => {
-          this.isOnline = isOnline;
-          this.synchronizeData();
+          isOnline ? this._startPollingData() : this._stopPollingData();
         });
-      } else if (this._networkSubscription) {
-        this._networkSubscription.unsubscribe();
+      } else {
+        this._stopPollingData();
+        if (this._networkSubscription) {
+          this._networkSubscription.unsubscribe();
+        }
       }
     });
+  }
+
+  public startPollingData(): void {
+    this._startPollingData();
+  }
+
+  public stopPollingData(): void {
+    this._stopPollingData();
+  }
+
+  private _startPollingData(): void {
+    !!this._pollingDataInterval && this._stopPollingData();
+    this._pollingDataInterval = setInterval(() => {
+      this._synchronizeData();
+    }, 5000)
+  }
+
+  private _stopPollingData(): void {
+    clearInterval(this._pollingDataInterval);
   }
 
   /**
    * when online, synchronize data with the remote changes in things
    */
-  private synchronizeData(): void {
-    if (this.isOnline) {
-      const promiseArray: Promise<any>[] = [];
-      // Get all things from remote service
-      this.thingProvider.getAllThings().then((things: ThingModel[]) => {
-        // Save each thing into the DB
-        things.forEach(thing => promiseArray.push(this.thingDB.set(thing.id, thing)));
-        Promise.all(promiseArray).then(
-          () => this.refreshList(),
-          (error) => this.loggerService.error(this, `FAILED Set Thing into DB.`, error));
-      }, (error) => this.loggerService.error(this, `FAILED Get All Things from API.`, error));
-    }
+  private _synchronizeData(): void {
+    const promiseArray: Promise<any>[] = [];
+    // Get all things from remote service
+    this.thingProvider.getAllThings().then((things: ThingModel[]) => {
+      // Save each thing into the DB
+      things.forEach(thing => promiseArray.push(this.thingDB.set(thing.id, thing)));
+      Promise.all(promiseArray).then(
+        () => this.refreshList(),
+        (error) => this.loggerService.error(this, `FAILED Set Thing into DB.`, error));
+    }, (error) => this.loggerService.error(this, `FAILED Get All Things from API.`, error));
   }
 
   /**
@@ -119,7 +145,7 @@ export class ThingStore {
   }
 
   /**
-   * Method to know if the thing list changes.
+   * Method to know if the thing list changes and retrieve it.
    */
   public thingsChange(): Observable<ThingModel[]> {
     return this._currentThingsObservable.asObservable().share();
@@ -176,7 +202,7 @@ export class ThingStore {
       this.linkProvider.flagAsMainThing(thing.id, thing.type, oldMainThingId, thing.linkedRoomId)
         .then(() => {
           let promise: Promise<any>;
-          if(!oldMainThingId) {
+          if (!oldMainThingId) {
             promise = Promise.resolve();
           } else {
             oldMainThing = this.getCurrentThingById(oldMainThingId);
@@ -206,9 +232,9 @@ export class ThingStore {
     return this.thingDB.removeAll();
   }
 
-  public linkRoom(thing: ThingModel, roomId: string): Promise<any> {
+  public linkRoom(thing: ThingModel, roomId: string, boardModelId: string, boardPin: string): Promise<any> {
     const promise: Promise<any> = new Promise((resolve, reject) => {
-      this.linkProvider.linkRoom(thing.id, roomId)
+      this.linkProvider.linkRoom(thing.id, thing.model, roomId, boardModelId, boardPin)
         .then(() => {
           thing.linkedRoomId = roomId;
           return this.thingDB.set(thing.id, thing);
@@ -274,16 +300,16 @@ export class ThingStore {
   private setProperty(thing: ThingModel, command: CommandRequestModel): Promise<any> {
     const promise: Promise<any> = new Promise<any>((resolve, reject) => {
       this.thingProvider.setProperty(thing.id, command)
-      .then((answer: CommandAnswerModel) => {
-        this.updateThingWithCommand(thing, answer);
-        return this.thingDB.set(thing.id, thing);
-      })
-      .then(() => this.refreshList())
-      .then(() => resolve())
-      .catch((error) => {
-        this.loggerService.error(this, `Failed Process setProperty.`, error);
-        reject(error);
-      });
+        .then((answer: CommandAnswerModel) => {
+          this.updateThingWithCommand(thing, answer);
+          return this.thingDB.set(thing.id, thing);
+        })
+        .then(() => this.refreshList())
+        .then(() => resolve())
+        .catch((error) => {
+          this.loggerService.error(this, `Failed Process setProperty.`, error);
+          reject(error);
+        });
     });
     return promise;
   }
@@ -299,6 +325,9 @@ export class ThingStore {
       case ThingModel.HUMIDIFIER:
         this.updateHumidifierWithCommand(thing, command);
         break;
+      case ThingModel.SENSOR:
+        this.updateSensorWithCommand(thing, command);
+        break;
       default:
         break;
     }
@@ -307,7 +336,7 @@ export class ThingStore {
   private updateLightWithCommand(thing: ThingModel, command: CommandAnswerModel): void {
     switch (command.commandRequest.command) {
       case COMMAND_CONSTANTS.POWER.STATUS:
-        thing.typeProperties.powerStatus = command.commandRequest.value === LightModel.ON?
+        thing.typeProperties.powerStatus = command.commandRequest.value === LightModel.ON ?
           LightModel.ON : LightModel.OFF;
         break;
       default:
@@ -318,7 +347,7 @@ export class ThingStore {
   private updateACWithCommand(thing: ThingModel, command: CommandAnswerModel): void {
     switch (command.commandRequest.command) {
       case COMMAND_CONSTANTS.POWER.STATUS:
-        thing.typeProperties.powerStatus = command.commandRequest.value === AirConditionerModel.ON?
+        thing.typeProperties.powerStatus = command.commandRequest.value === AirConditionerModel.ON ?
           AirConditionerModel.ON : AirConditionerModel.OFF;
         break;
       default:
@@ -329,9 +358,20 @@ export class ThingStore {
   private updateHumidifierWithCommand(thing: ThingModel, command: CommandAnswerModel): void {
     switch (command.commandRequest.command) {
       case COMMAND_CONSTANTS.POWER.STATUS:
-        thing.typeProperties.powerStatus = command.commandRequest.value === HumidifierModel.ON?
+        thing.typeProperties.powerStatus = command.commandRequest.value === HumidifierModel.ON ?
           HumidifierModel.ON : HumidifierModel.OFF;
         break;
+      default:
+        break;
+    }
+  }
+
+  private updateSensorWithCommand(thing: ThingModel, command: CommandAnswerModel): void {
+    switch (command.commandRequest.command) {
+      // case COMMAND_CONSTANTS.POWER.STATUS:
+      //   thing.typeProperties.powerStatus = command.commandRequest.value === SensorModel.ON?
+      //     SensorModel.ON : SensorModel.OFF;
+      //   break;
       default:
         break;
     }

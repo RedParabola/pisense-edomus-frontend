@@ -129,7 +129,7 @@ export class UserStore {
     this.authService.onRequestedLogout();
   }
 
-  private _cleanLastUserInfo(): Promise < any > {
+  private _cleanLastUserInfo(): Promise <any> {
     const promise: Promise<any> = new Promise<any>((resolve, reject) => {
 
       let roomClean = this.roomStore.cleanUserRooms();

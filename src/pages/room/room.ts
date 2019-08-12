@@ -54,7 +54,7 @@ export class RoomPage {
     const roomId: string = this.navParams.get('roomId');
     this.room = Object.assign({}, this.roomStore.getCurrentRoomById(roomId));
     this.roomTypeImage = this.sanitizer.bypassSecurityTrustStyle(`url('assets/imgs/${this.room.type.toLowerCase()}.jpg')`);
-    this.thingStore.thingsChange().filter(array => !!array.length).first().subscribe(
+    this.thingStore.thingsChange().filter(array => !!array.length).subscribe(
       (storeThings: ThingModel[]) => {
         this.roomThings = storeThings.filter(thing => thing.linkedRoomId === this.room.id);
         this.loadingService.dismiss();

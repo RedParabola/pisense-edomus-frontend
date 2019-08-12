@@ -4,12 +4,18 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 // Machine attribute class to extend
 import { ThingComponentAbstract } from '../thing-component.abstract';
+import { LightModel } from '../../../../core/model/thing.model';
 
 /**
  * Light component for light type things.
  */
 @Component({ selector: 'light', templateUrl: './light.component.html' })
 export class LightComponent extends ThingComponentAbstract implements OnInit {
+
+  /**
+   * 
+   */
+  private properties: LightModel;
 
   /**
    * LightComponent constructor.
@@ -24,6 +30,20 @@ export class LightComponent extends ThingComponentAbstract implements OnInit {
    */
   public ngOnInit() {
     this.displayThingTypeIconAndImage();
+    this.prepareDisplayByModel();
+  }
+
+  private prepareDisplayByModel() {
+    this.properties = this.thing.typeProperties as LightModel;
+    switch (this.thing.model) {
+      case 'led':
+        break;
+      case 'rgbled':
+        
+        break;
+      default:
+        break;
+    }
   }
 
 }

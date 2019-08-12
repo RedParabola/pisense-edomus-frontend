@@ -7,7 +7,7 @@ import { TitleCasePipe } from '@angular/common';
 import { ThingDraftModel, ThingModel } from '../../../core/model/thing.model';
 
 // Constants
-import { THING_CONSTANTS } from '../../../core/constants/thing.constants';
+import { THING_CONSTANTS, AVAILABLE_MODELS_BY_THING } from '../../../core/constants/thing.constants';
 
 /**
  * Component for the wizard thing modal in the connect menu.
@@ -134,9 +134,7 @@ export class WizardThingModal {
   }
 
   private loadModels() {
-    // TODO: retrieve registered models for the selected thing type.
-    // Should ask the thing store which would retrieve the models in a promise.
-    this.models = ['Model-S', 'Model-C', 'Model-R'];
+    this.models = AVAILABLE_MODELS_BY_THING[this.finalConfiguration.type];
   }
 
 }

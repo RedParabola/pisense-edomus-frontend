@@ -74,7 +74,7 @@ export class ApiGenericProvider {
    * @param id Unique value from the object it wants to be retrieved.
    * @returns Promise that if resolved, will return call response.
    */
-  protected get(endpoint: string, id?: string) {
+  protected get(endpoint: string, id?: string): Promise<any> {
     const headers: HttpHeaders = new HttpHeaders(this.headers);
     return this.http.get(id? `${this.url}${endpoint}/${encodeURIComponent(id)}`:`${this.url}${endpoint}`, { headers })
       .timeout(10000)
@@ -90,7 +90,7 @@ export class ApiGenericProvider {
    * @param id Unique value from the object it wants to be retrieved.
    * @returns Promise that if resolved, will return call response.
    */
-  protected create(endpoint: string, resource: any, id?: string) {
+  protected create(endpoint: string, resource: any, id?: string): Promise<any> {
     const headers: HttpHeaders = new HttpHeaders(this.headers);
     return this.http.post(id? `${this.url}${endpoint}/${encodeURIComponent(id)}`:`${this.url}${endpoint}`, JSON.stringify(resource),  { headers })
       .timeout(10000)
@@ -106,7 +106,7 @@ export class ApiGenericProvider {
    * @param id Unique value from the object it wants to be retrieved.
    * @returns Promise that if resolved, will return call response.
    */
-  protected update(endpoint: string, resource: any, id?: string) {
+  protected update(endpoint: string, resource: any, id?: string): Promise<any> {
     const headers: HttpHeaders = new HttpHeaders(this.headers);
     return this.http.put(id? `${this.url}${endpoint}/${encodeURIComponent(id)}`:`${this.url}${endpoint}`, JSON.stringify(resource),  { headers })
       .timeout(10000)
@@ -121,7 +121,7 @@ export class ApiGenericProvider {
    * @param id Unique value from the object specified.
    * @returns Promise that if resolved, will return call response.
    */
-  protected delete(endpoint: string, id: string) {
+  protected delete(endpoint: string, id: string): Promise<any> {
     const headers: HttpHeaders = new HttpHeaders(this.headers);
     return this.http.delete(`${this.url}${endpoint}/${encodeURIComponent(id)}`,  { headers })
       .timeout(10000)
@@ -134,7 +134,7 @@ export class ApiGenericProvider {
    * Function that handles several different errors.
    * @param error error from response.
    */
-  private handleError(error: Response) {
+  private handleError(error: Response): Observable<any> {
     if (error instanceof TimeoutError) {
       return Observable.throw(new ApiErrorTimeOut());
     } else if (error.status === 400) {

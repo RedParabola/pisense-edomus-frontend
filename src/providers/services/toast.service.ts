@@ -28,7 +28,7 @@ export class ToastService {
    * Shows a toast with options.
    * @param options Toast options from @link https://ionicframework.com/docs/api/components/toast/ToastController/#advanced
    */
-  public showToast(options: ToastOptions) {
+  public showToast(options: ToastOptions): void {
     let usedOptions = { ...this.defaultOptions, ...options };
     let toast = this.toastController.create(usedOptions);
     toast.present();

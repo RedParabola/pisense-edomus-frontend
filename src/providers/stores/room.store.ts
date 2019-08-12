@@ -36,9 +36,9 @@ export class RoomStore {
   private _networkSubscription: Subscription;
 
   /**
-   * Wether the app is currently connected or not.
+   * 
    */
-  private isOnline: boolean;
+  private _pollingDataInterval: any;
 
   /**
    * Constructor to declare all the necesary to initialize the class.
@@ -58,31 +58,50 @@ export class RoomStore {
     this.auth.authenticationObserver().subscribe((status: boolean) => {
       if (status) {
         this._networkSubscription = this.networkService.onlineObserver().subscribe((isOnline) => {
-          this.isOnline = isOnline;
-          this.synchronizeData();
+          isOnline ? this._startPollingData() : this._stopPollingData();
         });
-      } else if (this._networkSubscription) {
-        this._networkSubscription.unsubscribe();
+      } else {
+        this._stopPollingData();
+        if (this._networkSubscription) {
+          this._networkSubscription.unsubscribe();
+        }
       }
     });
+  }
+
+  public startPollingData(): void {
+    this._startPollingData();
+  }
+
+  public stopPollingData(): void {
+    this._stopPollingData();
+  }
+
+  private _startPollingData(): void {
+    !!this._pollingDataInterval && this._stopPollingData();
+    this._pollingDataInterval = setInterval(() => {
+      this._synchronizeData();
+    }, 5000)
+  }
+
+  private _stopPollingData(): void {
+    clearInterval(this._pollingDataInterval);
   }
 
   /**
    * when online, synchronize data with the remote changes in rooms
    */
-  private synchronizeData(): void {
-    if (this.isOnline) {
-      const promiseArray: Promise<any>[] = [];
-      // Get all rooms from remote service
-      this.roomProvider.getAllRooms().then((rooms: RoomModel[]) => {
-        // Save each room into the DB
-        rooms.forEach(room => promiseArray.push(this.roomDB.set(room.id, room)));
-        Promise.all(promiseArray).then(
-          () => this.refreshList(),
-          (error) => this.loggerService.error(this, `FAILED Set Room into DB.`, error)
-        );
-      }, (error) => this.loggerService.error(this, `FAILED Get All Rooms from API.`, error));
-    }
+  private _synchronizeData(): void {
+    const promiseArray: Promise<any>[] = [];
+    // Get all rooms from remote service
+    this.roomProvider.getAllRooms().then((rooms: RoomModel[]) => {
+      // Save each room into the DB
+      rooms.forEach(room => promiseArray.push(this.roomDB.set(room.id, room)));
+      Promise.all(promiseArray).then(
+        () => this.refreshList(),
+        (error) => this.loggerService.error(this, `FAILED Set Room into DB.`, error)
+      );
+    }, (error) => this.loggerService.error(this, `FAILED Get All Rooms from API.`, error));
   }
 
   /**

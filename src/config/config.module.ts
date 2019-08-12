@@ -5,5 +5,6 @@ export * from './barcodeScanner.config';
 export * from './inAppBrowser.config';
 export * from './application-data.db.config';
 export * from './room.db.config';
+export * from './board.db.config';
 export * from './thing.db.config';
 export * from './user.db.config';

@@ -55,14 +55,14 @@ export class RoomDatabaseService {
    * Delete the room of the key provided by parameter.
    * @param key Primary key to delete the value.
    */
-  public remove(key: string) {
+  public remove(key: string): Promise<any> {
     return this.storageService.remove(this.roomDatabase, key);
   }
 
   /**
    * Delete all entries on the room database.
    */
-  public removeAll() {
+  public removeAll(): Promise<any> {
     return this.storageService.removeAll(this.roomDatabase);
   }
 }
