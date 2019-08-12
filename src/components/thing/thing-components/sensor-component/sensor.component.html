@@ -1,13 +1,43 @@
 <ion-card style="margin: 4px;">
   <div class="thing-image-background"
-  [style.background-image]="thingTypeImage">
-    <div class="thing-display" class="illuminated">
+       [style.background-image]="thingTypeImage">
+    <div class="thing-display">
+
       <ion-row padding text-wrap style="height: 35px;">
-        <div class="thing-icon">
-          <ion-icon name="{{thingTypeIcon}}"></ion-icon>
-        </div>
+        <div class="thing-icon"><ion-icon name="{{thingTypeIcon}}"></ion-icon></div>
         <div class="thing-title">{{thing.customName}}</div>
       </ion-row>
+
+      <ion-row padding-horizontal class="temperature-info" *ngIf="thing.model === 'dht11' && sensorMeasures">
+        <ion-col col-4>
+        </ion-col>
+        <ion-col col-4 text-right padding-right>
+          <ion-icon name="icon-temperature"></ion-icon>
+        </ion-col>
+        <ion-col col-4 text-left padding-left>
+          {{sensorMeasures.temperature}}ºC
+        </ion-col>
+      </ion-row>
+      <ion-row padding-horizontal class="humidity-info" *ngIf="thing.model === 'dht11' && sensorMeasures">
+        <ion-col col-4>
+        </ion-col>
+        <ion-col col-4 text-right padding-right>
+          <ion-icon name="icon-drop"></ion-icon>
+        </ion-col>
+        <ion-col col-4 text-left padding-left>
+          {{sensorMeasures.humidity}}%
+        </ion-col>
+      </ion-row>
+
+      <ion-row padding-horizontal class="air-quality-info" *ngIf="thing.model === 'mq135' && sensorMeasures">
+        <ion-col col-8 text-right padding-right>
+          <ion-icon name="icon-alarm"></ion-icon><span>Air quality</span>
+        </ion-col>
+        <ion-col col-4 text-left padding-left>
+          {{hasAirQualityMeasure ? (sensorMeasures.airQuality ? 'Good' : 'Warning') : 'Unknown'}}
+        </ion-col>
+      </ion-row>
+
     </div>
   </div>
 </ion-card>

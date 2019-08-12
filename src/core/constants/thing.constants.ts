@@ -33,6 +33,6 @@ export const AVAILABLE_MODELS_BY_THING = {
   ],
   SENSOR: [
     "dht11",
-    "mq235",
+    "mq135",
   ]
 };

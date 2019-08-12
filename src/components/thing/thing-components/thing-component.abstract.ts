@@ -36,6 +36,15 @@ export abstract class ThingComponentAbstract {
 
   protected displayThingTypeIconAndImage(): void {
     this.thingTypeIcon = THING_CONSTANTS.ICON[this.thing.type];
-    this.thingTypeImage = this.sanitizer.bypassSecurityTrustStyle(`url('assets/imgs/${this.thing.type.toLowerCase()}.jpg')`);
+    let fileName;
+    switch (this.thing.type) {
+      case ThingModel.SENSOR:
+        fileName = this.thing.model;
+        break;
+      default:
+        fileName = this.thing.type.toLowerCase();
+        break;
+    }
+    this.thingTypeImage = this.sanitizer.bypassSecurityTrustStyle(`url('assets/imgs/${fileName}.jpg')`);
   }
 }

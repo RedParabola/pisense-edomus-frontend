@@ -10,10 +10,9 @@ sensor {
       font-weight: bold;
     }
     .thing-display {
-      background: linear-gradient(to right, transparent 0%, $black 100%),
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.7) 150%),
                   linear-gradient(-3deg, transparent 50%, $white 85%),
-                  linear-gradient(172deg, transparent 60%, $black 120%),
-                  linear-gradient(to right, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.4) 100%);
+                  linear-gradient(172deg, transparent 60%, $black 120%);
       .thing-icon {
       }
       .thing-title {
@@ -22,9 +21,6 @@ sensor {
       }
     }
     .illuminated {
-      background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.5) 100%),
-                  linear-gradient(-3deg, transparent 50%, $white 85%),
-                  linear-gradient(172deg, transparent 60%, $black 120%);
     }
   }
 }
