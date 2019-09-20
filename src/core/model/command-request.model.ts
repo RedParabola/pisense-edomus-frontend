@@ -9,8 +9,8 @@ export interface CommandRequestModel {
   command: string;
 
   /**
-   * Value of the command when needed.
+   * Parameters for the command when needed.
    */
-  value?: string | number;
+  parameters?: any;
 
 }

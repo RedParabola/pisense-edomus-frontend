@@ -243,7 +243,7 @@ export class ThingStore {
         .then(() => this.refreshList())
         .then(() => resolve())
         .catch((error) => {
-          this.loggerService.error(this, `Failed Process flagAsMainThing.`, error);
+          this.loggerService.error(this, `Failed Process linkRoom.`, error);
           reject(error);
         });
     })
@@ -275,8 +275,7 @@ export class ThingStore {
    */
   public turnOn(thing: ThingModel): Promise<any> {
     const commandReq: CommandRequestModel = {
-      command: COMMAND_CONSTANTS.POWER.STATUS,
-      value: ThingModel.ON
+      command: COMMAND_CONSTANTS.POWER_ON
     } as CommandRequestModel;
     return this.setProperty(thing, commandReq);
   }
@@ -286,8 +285,7 @@ export class ThingStore {
    */
   public turnOff(thing: ThingModel): Promise<any> {
     const commandReq: CommandRequestModel = {
-      command: COMMAND_CONSTANTS.POWER.STATUS,
-      value: ThingModel.OFF
+      command: COMMAND_CONSTANTS.POWER_OFF
     } as CommandRequestModel;
     return this.setProperty(thing, commandReq);
   }
@@ -335,9 +333,11 @@ export class ThingStore {
 
   private updateLightWithCommand(thing: ThingModel, command: CommandAnswerModel): void {
     switch (command.commandRequest.command) {
-      case COMMAND_CONSTANTS.POWER.STATUS:
-        thing.typeProperties.powerStatus = command.commandRequest.value === LightModel.ON ?
-          LightModel.ON : LightModel.OFF;
+      case COMMAND_CONSTANTS.POWER_ON:
+        thing.typeProperties.powerStatus = LightModel.ON;
+        break;
+      case COMMAND_CONSTANTS.POWER_OFF:
+        thing.typeProperties.powerStatus = LightModel.OFF;
         break;
       default:
         break;
@@ -345,25 +345,25 @@ export class ThingStore {
   }
 
   private updateACWithCommand(thing: ThingModel, command: CommandAnswerModel): void {
-    switch (command.commandRequest.command) {
-      case COMMAND_CONSTANTS.POWER.STATUS:
-        thing.typeProperties.powerStatus = command.commandRequest.value === AirConditionerModel.ON ?
-          AirConditionerModel.ON : AirConditionerModel.OFF;
-        break;
-      default:
-        break;
-    }
+    // switch (command.commandRequest.command) {
+    //   case COMMAND_CONSTANTS.POWER.STATUS:
+    //     thing.typeProperties.powerStatus = command.commandRequest.value === AirConditionerModel.ON ?
+    //       AirConditionerModel.ON : AirConditionerModel.OFF;
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 
   private updateHumidifierWithCommand(thing: ThingModel, command: CommandAnswerModel): void {
-    switch (command.commandRequest.command) {
-      case COMMAND_CONSTANTS.POWER.STATUS:
-        thing.typeProperties.powerStatus = command.commandRequest.value === HumidifierModel.ON ?
-          HumidifierModel.ON : HumidifierModel.OFF;
-        break;
-      default:
-        break;
-    }
+    // switch (command.commandRequest.command) {
+    //   case COMMAND_CONSTANTS.POWER.STATUS:
+    //     thing.typeProperties.powerStatus = command.commandRequest.value === HumidifierModel.ON ?
+    //       HumidifierModel.ON : HumidifierModel.OFF;
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 
   private updateSensorWithCommand(thing: ThingModel, command: CommandAnswerModel): void {

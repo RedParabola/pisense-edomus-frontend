@@ -71,7 +71,7 @@ export class NetworkService {
     this.localNetworkUrl = '';
     this.remoteNetworkUrl = '';
 
-    if (this.platform.is('android') && ! this.platform.is('mobileweb')) {
+    if (this.platform.is('android') && !this.platform.is('mobileweb')) {
       // TODO: Should warn user that android 8+ needs GPS permission and GPS turned ON
       // to provide you of SSID & MAC for security purposes.
       this.androidPermissions.requestPermissions([

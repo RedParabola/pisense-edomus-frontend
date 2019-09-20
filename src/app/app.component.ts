@@ -49,7 +49,7 @@ export class MyApp {
         this.splashScreen.hide();
       }
     }, () => {
-      this.loggerService.error(this, `App will not start correctly.`); 
+      this.loggerService.error(this, `App will not start correctly.`);
     });
   }
 

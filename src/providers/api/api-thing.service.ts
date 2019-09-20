@@ -39,7 +39,6 @@ export class ApiThingProvider extends ApiGenericProvider {
           resolve(response);
         }, (error) => {
           reject(error);
-          //resolve(this.getMockThings());
         }
       );
     });
@@ -112,70 +111,10 @@ export class ApiThingProvider extends ApiGenericProvider {
           resolve(response);
         }, (error) => {
           reject(error)
-          //resolve(this.getMockCommandAnswer(command));
         }
       );
     });
     return promise;
   }
-
-/*
-  private getMockCommandAnswer(command: CommandRequestModel): CommandAnswerModel {
-    const commandAnswer: CommandAnswerModel = {
-      commandRequest: command,
-      answer: 'OK'
-    };
-    return commandAnswer;
-  }
-
-  private getMockThings(): ThingModel[] {
-    const thingList: ThingModel[] = [
-      {
-        id: 'light1',
-        type: ThingModel.LIGHT,
-        customName: 'My new Light',
-        model: 'Mock-Light v1.0',
-        typeProperties: {
-          powerType: LightModel.BINARY,
-          powerStatus: LightModel.ON
-        }
-      },
-      {
-        id: 'ac1',
-        type: ThingModel.AC,
-        customName: 'My new AC',
-        model: 'Super MockAir',
-        typeProperties: {
-          powerStatus: AirConditionerModel.ON,
-          intensity: {
-            currentValue: 3,
-            defaultValue: 1,
-            rangeMin: 1,
-            rangeMax: 5,
-            step: 1
-          },
-          temperature: {
-            currentValue: 22,
-            defaultValue: 24,
-            rangeMin: 14,
-            rangeMax: 34,
-            step: 1
-          },
-        }
-      },
-      {
-        id: 'light2',
-        type: ThingModel.LIGHT,
-        customName: 'My mock light',
-        model: 'Mock-Light v1.0',
-        typeProperties: {
-          powerType: LightModel.BINARY,
-          powerStatus: LightModel.OFF
-        }
-      }
-    ];
-    return thingList;
-  }
-*/
 
 }

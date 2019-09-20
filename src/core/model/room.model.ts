@@ -30,13 +30,9 @@ export interface RoomModel {
     SENSOR?: string;
   }
   /**
-   * current temperature
+   * Object containing all the possible measures of the things linked to the given room.
    */
-  temperature?: number;
-  /**
-   * current humidity
-   */
-  humidity?: number;
+  sensorMeasures: any;
 }
 
 /**
